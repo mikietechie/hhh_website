@@ -1,0 +1,34 @@
+:root{
+    --accent: #f0e5d7;
+    --tertiary: #050300;
+}
+
+.text-accent {
+    color: var(--accent);
+}
+.text-tertiary {
+    color: var(--tertiary);
+}
+
+.bg-accent {
+    background-color: var(--accent);
+}
+.bg-tertiary {
+    background-color: var(--tertiary);
+}
+
+.opacity-8 {
+    opacity: 0.8;
+}
+
+
+
+#hero {
+    .container {
+        background-image: url("../media/hero.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        height: 70vh;
+    }
+}
