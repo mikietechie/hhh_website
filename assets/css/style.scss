@@ -19,6 +19,13 @@ h1 {
     }
 }
 
+#navbar {
+    a {
+        text-decoration: none;
+        color: var(--dark);
+    }
+}
+
 #hero {
     .container {
         .has-bg-img {
@@ -43,9 +50,9 @@ h1 {
 }
 
 #faq {
-    .container {
-        .row {}
-    }
+    // .container {
+    //     .row {}
+    // }
 
     @media (min-width:992px) {
         .col-lg-5 {

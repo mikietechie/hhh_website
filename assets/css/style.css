@@ -18,6 +18,11 @@ h1 .text-decoration-underline {
   text-decoration-thickness: 0.1rem;
 }
 
+#navbar a {
+  text-decoration: none;
+  color: var(--dark);
+}
+
 #hero .container .has-bg-img {
   background-image: url("../media/hero.jpg");
   background-repeat: no-repeat;

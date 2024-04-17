@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="Mike Zinyoni mzinyoni7@outlook.com">
     <title>HHH | Home</title>
     <link rel="stylesheet" href="./assets/lib/bootstrap5/css/flatly.bootstrap.min.css" />
     <link rel="stylesheet" href="./assets/lib/fontawesome/css/all.min.css" />
@@ -17,36 +20,78 @@
 </head>
 
 <body>
-    <section id="navbar" class="d-none">
-        <div class="container-fluid d-none d-lg-block">
-            <div class="row">
-                <div class="col-lg-4"></div>
+    <section id="navbar" class="">
+        <div class="container-fluid nav-large d-none d-lg-block">
+            <div class="row py-4 px-lg-4">
                 <div class="col-lg-4">
-                    <img src="./assets/media/HHH_Logo.svg" alt="">
+                    <div class="text-start mt-3">
+                        <span class="opacity-0">Hello World</span>
+                        <br>
+                        <span class="theme-bg-secondary py-1 px-2 rounded">
+                            <a href="/#hero" class="pe-2">SHOP</a></li>
+                            <a href="/#customize" class="pe-2">CUSTOMIZE</a></li>
+                            <a href="/#features" class="pe-2">FEATURES</a></li>
+                        </span>
+                    </div>
                 </div>
-                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                    <a href="/"><img src="./assets/media/HHH_Logo.svg" alt="HHH Official Logo"></a>
+                </div>
+                <div class="col-lg-4">
+                    <div class="text-end mt-3">
+                        <span class="pe-5">
+                            <a href="#!" class="">EN</a></li>
+                            <a href="#!" class="ps-1">DE</a></li>
+                        </span>
+                        <br>
+                        <span class="theme-bg-secondary py-1 px-2 rounded me-1">
+                            <a href="/#about" class="pe-2">ABOUT</a></li>
+                            <a href="/#faq" class="pe-2">FAQ</a></li>
+                            <a href="/#contact" class="pe-2">CONTACT</a></li>
+                        </span>
+                        <span class="theme-bg-secondary py-1 px-2 rounded-pill">
+                            <a href="" class="px-2"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="container-fluid d-lg-none">
-            <h1>Nav Small</h1>
+            <div class="row">
+                <div class="col-12 pt-2" style="transform: translateY(100%); margin-top: -100%;">
+                    <div class="text-end">
+                        <a href="#menu" id="menu-btn" class=""><i class="fa-2x fa-solid fa-bars"></i></a>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <a href="/"><img src="./assets/media/HHH_Logo.svg" alt="HHH Official Logo"></a>
+                </div>
+            </div>
         </div>
     </section>
-    <section id="hero" class="d-none">
-        <div class="container">
-            <div class="has-bg-img"></div>
-        </div>
-        <div class="container">
+    <section id="hero" class="">
+        <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-4">
-
-                </div>
-                <div class="col-lg-7">
-                    <div>
-                        <h6>Lorem ipsum dolor Lorem ipsum dolor sit</h6>
-                        <h2>
-                            LOREM IPSUM DOL SIT <br>
-                            OREM LOREM IPSUM
-                        </h2>
+                <div class="col-12 px-lg-4">
+                    <img src="./assets/media/hero.jpg" class="w-100" alt="" style="height: 70vh;">
+                    <div class="row">
+                        <div class="col-lg-4 col-3">
+                            <p class="ps-lg-3 pt-3" style="font-size: larger;">
+                                <i class="fa-brands fa-facebook-square"></i>&nbsp;
+                                <i class="fa-brands fa-instagram-square"></i>&nbsp;
+                                <i class="fa-brands fa-pinterest-square"></i>&nbsp;
+                            </p>
+                        </div>
+                        <div class="col-lg-7 col-9" style="transform: translateY(-50%);">
+                            <div class="p-3 text-end"
+                                style="border: 8px solid var(--light); background-color: var(--white);">
+                                <h6>Lorem ipsum dolor Lorem ipsum dolor sit</h6>
+                                <h2>
+                                    LOREM IPSUM DOL SIT <br>
+                                    OREM LOREM IPSUM
+                                </h2>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -450,7 +495,7 @@
             </div>
         </div>
     </section>
-    <section id="couch-bg">
+    <section id="couch-bg" class="d-none">
         <div class="container-fluid m-0 p-0">
             <img src="./assets/media/couch.jpg" class="w-100" alt="" style="height: 400px;">
         </div>
@@ -572,7 +617,7 @@
                         <div class="col-12">
                             <h1 class="taxt-center"><span
                                     style="color: var(--warning);">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span>NEWSLETTER</h1>
-                            <form action="">
+                            <form action="#!">
                                 <div class="form-group mb-3">
                                     <label for="email" class="mb-1">Bleibe stets auf dem neuesten Stand.</label>
                                     <input type="email" name="email" class="form-control" placeholder="E-mail" />
@@ -586,13 +631,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p>
-                                <a href="">About</a>
+                                <a href="/#about">About</a>
                             </p>
                             <p>
-                                <a href="">FAQs</a>
+                                <a href="/#customize">FAQs</a>
                             </p>
                             <p>
-                                <a href="">Contact</a>
+                                <a href="/#contact">Contact</a>
                             </p>
                         </div>
                         <div class="col-md-6">
@@ -615,5 +660,27 @@
         </div>
     </section>
 </body>
+
+<script>
+    const $menuBtn = document.querySelector("a#menu-btn")
+    let menuOpened = false
+    
+    $menuBtn.addEventListener("click", (e) => {
+        e.preventDefault()
+        menuOpened = !menuOpened
+        menuToggled()
+    })
+    const menuToggled = () => {
+        if (menuOpened) {
+            // change menu icon
+            // show menu drop down
+            alert("menu open")
+        } else {
+            // change menu icon
+            // hide menu drop down
+            alert("menu closed")
+        }
+    }
+</script>
 
 </html>
