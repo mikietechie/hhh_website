@@ -4,19 +4,35 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="">
+    <link rel="icon" type="image/x-icon" href="">
     <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="googlebot" content="index, follow" />
+    <meta name="Revist-After" content="">
+    <meta name="country" content="">
+    <meta name="subject" content="">
     <meta name="author" content="Mike Zinyoni mzinyoni7@outlook.com">
-    <title>HHH | Home</title>
-    <link rel="stylesheet" href="./assets/lib/bootstrap5/css/flatly.bootstrap.min.css" />
-    <link rel="stylesheet" href="./assets/lib/fontawesome/css/all.min.css" />
+    <meta name="copyright" content="Mike Zinyoni">
+  
+    <meta name="og:title" content="" />
+    <meta name="og:type" content="" />
+    <meta name="og:url" content="" />
+    <meta name="og:image" content="" />
+    <meta name="og:site_name" content="" />
+    <meta name="og:description" content="" />
+    
+    <meta name="author" content="Mike Zinyoni mzinyoni7@outlook.com">
+    <title>{% block title %}HHH | Home{% endblock title %}</title>
+    <link rel="stylesheet" href="/static/website/lib/bootstrap5/css/flatly.bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/website/lib/fontawesome/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/colors/colors.css" />
-    <link rel="stylesheet" href="./assets/css/fonts/fonts.css" />
-    <link rel="stylesheet" href="./assets/css/utils/utils.css" />
-    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="/static/website/css/colors/colors.css" />
+    <link rel="stylesheet" href="/static/website/css/fonts/fonts.css" />
+    <link rel="stylesheet" href="/static/website/css/utils/utils.css" />
+    <link rel="stylesheet" href="/static/website/css/style.css" />
+    {% block style %}{% endblock style %}
 </head>
 
 <body>
@@ -35,7 +51,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <a href="/"><img src="./assets/media/HHH_Logo.svg" alt="HHH Official Logo"></a>
+                    <a href="/"><img src="/static/website/media/HHH_Logo.svg" alt="HHH Official Logo"></a>
                 </div>
                 <div class="col-lg-4">
                     <div class="text-end mt-3">
@@ -64,7 +80,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <a href="/"><img src="./assets/media/HHH_Logo.svg" alt="HHH Official Logo"></a>
+                    <a href="/"><img src="/static/website/media/HHH_Logo.svg" alt="HHH Official Logo"></a>
                 </div>
             </div>
         </div>
@@ -73,7 +89,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 px-lg-4">
-                    <img src="./assets/media/hero.jpg" class="w-100" alt="" style="height: 70vh;">
+                    <img src="/static/website/media/hero.jpg" class="w-100" alt="" style="height: 70vh;">
                     <div class="row">
                         <div class="col-lg-4 col-3">
                             <p class="ps-lg-3 pt-3" style="font-size: larger;">
@@ -120,7 +136,7 @@
             </div>
         </div>
         <div class="container-fluid px-0 mx-0">
-            <img src="./assets/media/dogonrag.jpg" alt="" class="w-100" style="height: 400px" />
+            <img src="/static/website/media/dogonrag.jpg" alt="" class="w-100" style="height: 400px" />
         </div>
         <div class="container">
             <div class="row">
@@ -177,7 +193,7 @@
                 <div class="col-12 mb-5">
                     <div class="row">
                         <div class="col-lg-2 col-4">
-                            <img src="./assets/media/paw.png" alt="" class="d-inline square-100">
+                            <img src="/static/website/media/paw.png" alt="" class="d-inline square-100">
                         </div>
                         <div class="col-lg-10 col-8">
                             <p>
@@ -222,7 +238,7 @@
                 <div class="col-12 mb-5">
                     <div class="row">
                         <div class="col-lg-2 col-4">
-                            <img src="./assets/media/paw.png" alt="" class="d-inline square-100">
+                            <img src="/static/website/media/paw.png" alt="" class="d-inline square-100">
                         </div>
                         <div class="col-lg-10 col-8">
                             <p>
@@ -277,7 +293,7 @@
                 <div class="col-12 mb-5">
                     <div class="row">
                         <div class="col-lg-2 col-4">
-                            <img src="./assets/media/paw.png" alt="" class="d-inline square-100">
+                            <img src="/static/website/media/paw.png" alt="" class="d-inline square-100">
                         </div>
                         <div class="col-lg-10 col-8">
                             <p>
@@ -322,7 +338,7 @@
                 <div class="col-12 mb-5">
                     <div class="row">
                         <div class="col-lg-2 col-4">
-                            <img src="./assets/media/paw.png" alt="" class="d-inline square-100">
+                            <img src="/static/website/media/paw.png" alt="" class="d-inline square-100">
                         </div>
                         <div class="col-lg-10 col-8">
                             <p>
@@ -396,7 +412,7 @@
                 </div>
             </div>
         </div>
-        <img src="./assets/media/dogonrag.jpg" alt="" class="container-fluid" style="height: 400px" />
+        <img src="/static/website/media/dogonrag.jpg" alt="" class="container-fluid" style="height: 400px" />
         <div class="container">
             <div class="row py-5">
                 <div class="col-md-4">
@@ -497,7 +513,7 @@
     </section>
     <section id="couch-bg" class="d-none">
         <div class="container-fluid m-0 p-0">
-            <img src="./assets/media/couch.jpg" class="w-100" alt="" style="height: 400px;">
+            <img src="/static/website/media/couch.jpg" class="w-100" alt="" style="height: 400px;">
         </div>
     </section>
     <section id="contact" class="theme-bg-light">
@@ -589,22 +605,22 @@
                     <p>Schließe dich unserem Instagram-Rudel an!</p>
                 </div>
                 <div class="col-lg-4 col-md-6 mb-3">
-                    <img src="./assets/media/couch.jpg" class="w-100" style="height: 250px;" alt="">
+                    <img src="/static/website/media/couch.jpg" class="w-100" style="height: 250px;" alt="">
                 </div>
                 <div class="col-lg-4 col-md-6 mb-3">
-                    <img src="./assets/media/dogonrag.jpg" class="w-100" style="height: 250px;" alt="">
+                    <img src="/static/website/media/dogonrag.jpg" class="w-100" style="height: 250px;" alt="">
                 </div>
                 <div class="col-lg-4 col-md-6 mb-3">
-                    <img src="./assets/media/dressingtable.jpg" class="w-100" style="height: 250px;" alt="">
+                    <img src="/static/website/media/dressingtable.jpg" class="w-100" style="height: 250px;" alt="">
                 </div>
                 <div class="col-lg-4 col-md-6 mb-3">
-                    <img src="./assets/media/dogandwoman.jpg" class="w-100" style="height: 250px;" alt="">
+                    <img src="/static/website/media/dogandwoman.jpg" class="w-100" style="height: 250px;" alt="">
                 </div>
                 <div class="col-lg-4 col-md-6 mb-3">
-                    <img src="./assets/media/couch.jpg" class="w-100" style="height: 250px;" alt="">
+                    <img src="/static/website/media/couch.jpg" class="w-100" style="height: 250px;" alt="">
                 </div>
                 <div class="col-lg-4 col-md-6 mb-3">
-                    <img src="./assets/media/dogonrag.jpg" class="w-100" style="height: 250px;" alt="">
+                    <img src="/static/website/media/dogonrag.jpg" class="w-100" style="height: 250px;" alt="">
                 </div>
             </div>
         </div>

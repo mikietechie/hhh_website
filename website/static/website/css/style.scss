@@ -26,20 +26,11 @@ h1 {
     }
 }
 
-#hero {
-    .container {
-        .has-bg-img {
-            background-image: url("../media/hero.jpg");
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-            height: 70vh;
-        }
-    }
-}
+// #hero {
+// }
 
 #about {
-    background-image: url("../media/aboutbg.png");
+    background-image: url("/static/website/media/aboutbg.png");
     background-position: top left;
     background-repeat: no-repeat;
     // border-top-left-radius: 188px;

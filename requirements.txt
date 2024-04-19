@@ -1,0 +1,16 @@
+# crispy-bootstrap4==2022.1
+# django-crispy-forms==2.0
+Django
+django-cors-headers
+django-filter
+django-tinymce
+djangorestframework
+djangorestframework-simplejwt
+drf-yasg
+django-debug-toolbar
+ipython
+Pillow
+psycopg2-binary
+python-dotenv
+requests
+gunicorn
