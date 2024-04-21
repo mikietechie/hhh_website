@@ -4,11 +4,17 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 
+admin.site.site_title = "HHH Website"
+admin.site.site_header = "HHH Website"
+# admin.site.index_template = "website/index.html"
+
+
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('tinymce/', include('tinymce.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
     path('narrowroad/', admin.site.urls),
     path(f'auth/', include("app.urls.auth")),
+    path(f'payments/', include("app.urls.payments")),
     path(f'', include("website.urls")),
 ]
 

@@ -16,6 +16,7 @@ DEBUG = int(env["DEBUG"])
 ALLOWED_HOSTS = env["ALLOWED_HOSTS"].split(",")
 # CORS_ALLOWED_ORIGINS =  env["CORS_ALLOWED_ORIGINS"].split(",")
 CORS_ALLOW_ALL_ORIGINS = True 
+SITE_URL = "http://localhost:8000/"
 INTERNAL_IPS = ["127.0.0.1"]
 TEST = 'test' in sys.argv[1:]
 MAKEMIGRATIONS = 'makemigrations' in sys.argv[1:]
@@ -223,3 +224,7 @@ TINYMCE_DEFAULT_CONFIG = {
     "custom_undo_redo_levels": 10,
     # "language": "es_ES",  # To force a specific language instead of the Django current language.
 }
+
+# Stripe
+STRIPE_SECRET_KEY = "sk_test_26PHem9AhJZvU623DfE1x4sd"
+STRIPE_ENDPOINT_SECRET = "i eat pie"

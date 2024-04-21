@@ -1,6 +1,8 @@
 from decimal import Decimal as D
 # import typing
 # import datetime
+from enum import Enum
+from typing import Iterable
 
 
 from django.db import models
@@ -15,17 +17,21 @@ from .fields import ImageField
 
 class User(AbstractUser, Base):
     str_prefix = "U"
-    GENDERS = ("M", "F", "O")
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    class Genders(str, Enum):
+        male, female, other = "M", "F", "O"
 
     email = models.EmailField("Email Address", blank=True, unique=True)
     image = ImageField(upload_to="user_images", blank=True, null=True)
     phone = models.CharField(max_length=32, blank=True, null=True)
     gender = models.CharField(
-        max_length=1, choices=Base.iter_as_choices(*GENDERS), blank=True, null=True
+        max_length=1, choices=Base.iter_as_choices(*Genders), blank=True, null=True
     )
     date_of_birth = models.DateField(blank=True, null=True)
+    # address = models.TextField(blank=True, null=True, max_length=1024)
+    username = None
 
     def __str__(self):
         return self.get_full_name() or self.get_username()
@@ -42,12 +48,16 @@ class User(AbstractUser, Base):
     def active_invoice(self):
         return Invoice.objects.get_or_create(customer_id=self.pk, checked_out=False)[0]
 
-    def __str__(self):
-        return f"{self.str_id} - {self.user.get_full_name()}"
-
     def after_save(self, is_creation: bool):
         self.active_invoice
         return super().after_save(is_creation)
+
+
+class Customer(User):
+    class Meta:
+        proxy = True
+
+    
 
 
 class Category(Base):
@@ -87,26 +97,39 @@ class Invoice(Base):
     customer = models.ForeignKey(User, on_delete=models.PROTECT)
     checked_out = models.BooleanField(default=False)
     items_count = models.PositiveSmallIntegerField(default=0)
-    total = models.DecimalField(max_digits=32, decimal_places=2, default=D("0.00"))
+    total = models.DecimalField(
+        max_digits=32, decimal_places=2, default=D("0.00"))
+    paid = models.DecimalField(
+        max_digits=32, decimal_places=2, default=D("0.00"))
 
     def __str__(self):
         return f"{self.str_id} - {self.customer}"
 
     @cached_property
-    def invoice_items(self):
+    def items(self):
         return InvoiceItem.objects.filter(invoice=self)
 
     @cached_property
-    def invoice_items_total(self):
-        return self.invoice_items.aggregate(sm=models.Sum("line_total"))["sm"] or D("0.00")
+    def payments(self):
+        return Payment.objects.filter(invoice=self)
 
     @cached_property
-    def invoice_items_count(self):
-        return self.invoice_items.count()
+    def items_total(self):
+        return self.items.aggregate(sm=models.Sum("line_total"))["sm"] or D("0.00")
+
+    @cached_property
+    def items_count(self):
+        return self.items.count()
+
+    def sync_paid(self):
+        Invoice.objects.filter(id=self.pk).update(
+            paid=self.payments.filter(status=Payment.completed).aggregate(
+                sm=models.Sum("amount"))["sm"] or D("0.00")
+        )
 
     def sync_total_and_count(self):
         Invoice.objects.filter(id=self.pk).update(
-            total=self.invoice_items_total, items_count=self.invoice_items_count
+            total=self.items_total, items_count=self.items_count
         )
 
     def after_save(self, is_creation: bool):
@@ -114,8 +137,8 @@ class Invoice(Base):
         self.sync_total_and_count()
         return super_after_save
 
-    def update_invoice_items(self, product: Product, qty: int, action: str|None = None):
-        item_in_invoice = self.invoice_items.filter(product=product).first()
+    def update_items(self, product: Product, qty: int, action: str | None = None):
+        item_in_invoice = self.items.filter(product=product).first()
         if item_in_invoice:
             if qty:
                 item_in_invoice.qty = qty
@@ -131,8 +154,10 @@ class InvoiceItem(Base):
     invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     qty = models.PositiveSmallIntegerField(default=1)
-    unit_price = models.DecimalField(max_digits=32, decimal_places=2, blank=True)
-    line_total = models.DecimalField(max_digits=32, decimal_places=2, blank=True)
+    unit_price = models.DecimalField(
+        max_digits=32, decimal_places=2, blank=True)
+    line_total = models.DecimalField(
+        max_digits=32, decimal_places=2, blank=True)
 
     def __str__(self):
         return f"{self.str_id} - {self.product}"
@@ -142,6 +167,15 @@ class InvoiceItem(Base):
 
     def set_line_total(self):
         self.line_total = self.unit_price * self.qty
+
+    def clean_invoice(self):
+        if self.invoice.checked_out:
+            raise ValidationError(
+                "You cannot add or update items to a checkout out invoice!")
+
+    def clean(self) -> None:
+        super().clean()
+        self.clean_invoice()
 
     def save(self, *args, **kwargs):
         self.set_unit_price()
@@ -160,9 +194,51 @@ class InvoiceItem(Base):
         return super_after_save
 
 
+class Payment(Base):
+    str_prefix = "Payment"
+
+    class Statuses(str, Enum):
+        pending, cancelled, completed = "Pending", "Cancelled", "Completed"
+    
+    
+    class Methods(str, Enum):
+        cash, stripe = "Cash", "Stripe"
+
+    amount = models.DecimalField(
+        max_digits=32, decimal_places=2, default=D("0.00")
+    )
+    invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT)
+    method = models.CharField(
+        max_length=64,
+        choices=Base.iter_as_choices(Methods.cash, Methods.stripe)
+    )
+    status = models.CharField(
+        max_length=64,
+        choices=Base.iter_as_choices(*Statuses)
+    )
+    gateway_id = models.CharField(max_length=256, blank=True, null=True)
+    gateway_url = models.URLField(max_length=512, blank=True, null=True)
+
+
 class Settings(Base):
+    class Currencies(str, Enum):
+        euro, usd = "euro", "usd"
+
     featured_products = models.ManyToManyField(Product, blank=True)
+    currency = models.CharField(
+        max_length=16,
+        default=Currencies.euro,
+        choices=Base.iter_as_choices(*Currencies)
+    )
 
     @cached_property
     def categories(self):
         return Category.objects.all()
+    
+    def clean_id(self):
+        if not self.id and Settings.objects.exists():
+            raise ValidationError("You can only have one settings.") 
+    
+    def save(self, *args, **kwargs) -> None:
+        self.clean_id()
+        return super().save(*args, **kwargs)

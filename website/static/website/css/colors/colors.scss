@@ -7,9 +7,10 @@
   --success:#648072;
   --dark:#3b2a33;
   --secondary: #c9bab1;
+  --accent: #857371;
 }
 
-$colors: white,black,light,warning,tertiary,success,dark,secondary;
+$colors: white,black,light,warning,tertiary,success,dark,secondary,accent;
 
 
 @each $color in $colors {

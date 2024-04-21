@@ -43,5 +43,5 @@ class Base(models.Model):
     def iter_as_choices(cls, *args):
         return tuple([(i, i) for i in args])
     
-    def after_save(self, is_creation: bool):
+    def after_save(self, is_creation: bool, **kwargs):
         pass
