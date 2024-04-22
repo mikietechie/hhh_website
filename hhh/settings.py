@@ -5,17 +5,17 @@ import datetime
 
 from dotenv import load_dotenv
 
-load_dotenv("dot.env")
+load_dotenv()
 env = os.environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = env["SECRET_KEY"]
+SECRET_KEY = env.get("SECRET_KEY")
 
-DEBUG = int(env["DEBUG"])
-ALLOWED_HOSTS = env["ALLOWED_HOSTS"].split(",")
+DEBUG = int(env.get("DEBUG", 1))
+ALLOWED_HOSTS = env.get("ALLOWED_HOSTS", "").split(",")
 # CORS_ALLOWED_ORIGINS =  env["CORS_ALLOWED_ORIGINS"].split(",")
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 SITE_URL = "http://localhost:8000"
 INTERNAL_IPS = ["127.0.0.1"]
 TEST = 'test' in sys.argv[1:]

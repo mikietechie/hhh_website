@@ -55,4 +55,7 @@ h1 .text-decoration-underline {
 #footer * {
   color: var(--white);
   text-decoration: none;
+}
+#footer input {
+  color: var(--dark) !important;
 }/*# sourceMappingURL=style.css.map */

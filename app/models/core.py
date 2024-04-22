@@ -50,10 +50,14 @@ class User(AbstractUser, Base):
         return Invoice.objects.filter(customer=self.user)
 
     @property
-    def active_invoice(self):
-        return Invoice.objects.get_or_create(
+    def _active_invoice(self):
+        return Invoice.objects.filter(
             customer_id=self.pk, checked_out=False
-        )[0]
+        ).first()
+
+    @property
+    def active_invoice(self):
+        return self._active_invoice or Invoice.objects.create(customer=self)
 
     def save(self, *args, **kwargs) -> None:
         if self.password and (len(self.password) != 88):

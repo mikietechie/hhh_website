@@ -62,7 +62,7 @@
                             {% if user.is_authenticated %}
                             <a href="#!" class="">{{user}}</a></li>
                             {% else %}
-                            <a href="/login/" class="">Login</a></li>
+                            <a href="#signinup-form" class="">Login</a></li>
                             {% endif %}
 
                             <a href="#!" class="mx-1">EN</a></li>
@@ -101,12 +101,14 @@
             <div class="row py-5">
                 <div class="col-lg-6 offset-lg-3">
                     
-                    {% if not user.is_authenticated %}
                     <div class="row pb-5 mb-5" style="border-bottom: 5px solid var(--warning)">
+                        {% if not user.is_authenticated %}
                         <div class="col-12">
-                            <h1 class="taxt-center"><span
-                                    style="color: var(--warning);">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span>NEWSLETTER</h1>
-                            <form action="#!">
+                            <h1 class="taxt-center">
+                                <span style="color: var(--warning);">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                SIGN IN/UP
+                            </h1>
+                            <form action="/auth/signinup/?next=/shop/&current={{request.path}}#signinup-form" method="post" id="signinup-form">
                                 {% csrf_token %}
                                 <div class="form-group mb-3">
                                     <label for="email" class="mb-1">Bleibe stets auf dem neuesten Stand.</label>
@@ -116,13 +118,24 @@
                                     <label for="password" class="mb-1">Password</label>
                                     <input type="password" name="password" class="form-control" placeholder="Your Password" />
                                 </div>
+                                <div class="form-group mb-3">
+                                    <input type="checkbox" name="hasaccount" class="checkbox square-30" placeholder="Your Password" />
+                                    <label for="hasaccount" class=" mb-1">Already have account</label>
+                                </div>
                                 <div class="text-center">
-                                    <button class="btn theme-bg-secondary" type="submit">Sign Up</button>
+                                    <button class="btn theme-bg-secondary" type="submit">Submit</button>
                                 </div>
                             </form>
                         </div>
+                        {% else %}
+                        <div class="col-12">
+                            <h1 class="taxt-center">
+                                <span style="color: var(--warning);">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                {{user}}
+                            </h1>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
                         
                     <div class="row">
                         <div class="col-md-6">
