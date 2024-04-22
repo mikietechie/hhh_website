@@ -15,6 +15,7 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('narrowroad/', admin.site.urls),
     path(f'auth/', include("app.urls.auth")),
     path(f'payments/', include("app.urls.payments")),
+    path(f'invoices/', include("app.urls.invoices")),
     path(f'', include("website.urls")),
 ]
 

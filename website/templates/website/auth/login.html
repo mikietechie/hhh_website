@@ -1,0 +1,50 @@
+{% extends "website/layout.html" %}
+
+{% block body %}
+<section id="cart" class="h-100 h-custom theme-bg-light mb-5">
+    <div class="container py-5 h-100">
+        <div class="row mt-5 mb-5">
+            <div class="col-12">
+                <h1 class="text-center"><span class="theme-text-warning">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+                        class="text-decoration-underline">LOG</span>IN</h1>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-lg-4 mx-auto">
+                <form class="p-55" method="post" action="/auth/login/">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <div class="form-outline">
+                            <input type="text" id="email"  name="email" class="form-control form-control-lg" />
+                            <label class="form-label" for="email">Enter your Email</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-outline">
+                            <input type="password" id="password"  name="password" class="form-control form-control-lg" />
+                            <label class="form-label" for="password">Enter your Password</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <button type="submit" class="mx-1 btn btn-block btn-lg theme-bg-dark theme-text-light">
+                            <i class="fa-solid fa-right-to-bracket"></i>&nbsp;Login
+                        </button>
+                        <a href="/" class="mx-1 btn btn-block btn-lg theme-bg-dark theme-text-light">
+                            <i class="fa-solid fa-home"></i>&nbsp;Home
+                        </a>
+                        <!-- <br>
+                        <a href="/" class="btn btn-block btn-lg theme-bg-dark theme-text-light">
+                            <i class="fa-solid fa-home"></i>&nbsp;Home
+                        </a> -->
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

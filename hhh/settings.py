@@ -15,8 +15,8 @@ SECRET_KEY = env["SECRET_KEY"]
 DEBUG = int(env["DEBUG"])
 ALLOWED_HOSTS = env["ALLOWED_HOSTS"].split(",")
 # CORS_ALLOWED_ORIGINS =  env["CORS_ALLOWED_ORIGINS"].split(",")
-CORS_ALLOW_ALL_ORIGINS = True 
-SITE_URL = "http://localhost:8000/"
+CORS_ALLOW_ALL_ORIGINS = True
+SITE_URL = "http://localhost:8000"
 INTERNAL_IPS = ["127.0.0.1"]
 TEST = 'test' in sys.argv[1:]
 MAKEMIGRATIONS = 'makemigrations' in sys.argv[1:]
@@ -226,5 +226,5 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 # Stripe
-STRIPE_SECRET_KEY = "sk_test_26PHem9AhJZvU623DfE1x4sd"
+STRIPE_SECRET_KEY = "sk_test_51JdMRZEXsCI7ne3rrrKzr9jSVk5Kcu7h69M0K8ImgeW6MUZlOls5FnhkN3GJDGdU0MLJ0o96tR2emHnDPkK7kYsJ00LUBBdrt9"
 STRIPE_ENDPOINT_SECRET = "i eat pie"

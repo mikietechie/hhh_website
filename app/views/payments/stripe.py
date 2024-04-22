@@ -1,28 +1,27 @@
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import stripe
 
 from app.models import Payment, Invoice, Settings
 
-PAYMENTS_URL = f"{settings.SITE_URL}payments/"
-STRIPE_PAYMENTS_URL = f"{PAYMENTS_URL}stripe/"
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+
 def init_stripe():
-    return
     stripe.WebhookEndpoint.create(
         enabled_events=["charge.succeeded", "charge.failed"],
-        url=f"{STRIPE_PAYMENTS_URL}webhook/",
+        url=f"{settings.SITE_URL}/payments/stripe/webhook/",
     )
 
-init_stripe()
+
+# init_stripe()
 
 
 @csrf_exempt
-def create_checkout_session(request):
+def create_checkout_session(request, invoice_id: int):
     if request.method == 'GET':
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
@@ -33,21 +32,30 @@ def create_checkout_session(request):
             # [payment_intent_data] - capture the payment later
             # [customer_email] - prefill the email input in the form
             # For full details see https://stripe.com/docs/api/checkout/sessions/create
-
             # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
             app_settings = Settings.objects.first()
-            invoice = Invoice.objects.get(pk=0)
+            invoice = Invoice.objects.get(id=invoice_id)
+            success_url = f"{settings.SITE_URL}/payments/statuses/success/{invoice.pk}/"
+            cancel_url = f"{settings.SITE_URL}/payments/statuses/cancelled/{invoice.pk}/"
+            print(success_url, cancel_url)
             checkout_session: dict = stripe.checkout.Session.create(
-                success_url=f"{PAYMENTS_URL}statuses/success/{invoice.pk}/?session_id={{CHECKOUT_SESSION_ID}}",
-                cancel_url=f"{PAYMENTS_URL}statuses/cancelled/{invoice.pk}/?session_id={{CHECKOUT_SESSION_ID}}",
+                customer_email=invoice.invoice_email,
+                success_url=success_url,
+                cancel_url=cancel_url,
                 payment_method_types=['card'],
                 mode='payment',
                 line_items=[
                     {
-                        'name': i.product.name,
                         'quantity': i.qty,
-                        'currency': app_settings.currency,
-                        'amount': i.line_total,
+                        'price_data': {
+                            'currency': app_settings.currency,
+                            'unit_amount': int(i.product.price*100),
+                            'product_data': {
+                                'name': i.product.name,
+                                'description': i.product.description,
+                                'images': [f"{settings.SITE_URL}{i.product.image.url}"],
+                            },
+                        },
                     } for i in invoice.items
                 ],
                 metadata={
@@ -62,8 +70,9 @@ def create_checkout_session(request):
                 gateway_id=checkout_session["id"],
                 gateway_url=checkout_session["url"],
             )
-            return JsonResponse({'sessionId': checkout_session['id']})
+            return HttpResponseRedirect(checkout_session.url)
         except Exception as e:
+            raise e
             return JsonResponse({'error': str(e)})
 
 

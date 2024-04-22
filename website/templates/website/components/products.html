@@ -1,0 +1,23 @@
+<div class="{% firstof products_container_class 'row mb-5' %}">
+    {% for product in products_list %}
+    <div class="{% firstof product_container_class 'col-xxl-3 col-lg-4 col-md-6 px-lg-5 mb-5' %}" id="product-{{product.id}}">
+        <div class="card theme-bg-accent shadow">
+            <img src="{{product.image.url}}" alt="" class="card-img w-100" style="height: 250px;">
+            <div class="card-header">
+                <h3 class="card-title theme-text-light">{{product.name}}</h3>
+            </div>
+            <!-- <div class="card-body">
+                <div class="card-text">
+                    <p>
+                        {{product.description}}
+                    </p>
+                </div>
+            </div> -->
+            <div class="card-footer">
+                <a href="/invoices/cart/add/{{product.id}}/?next=/cart/" class="btn btn-light theme-text-dark me-1 mb-1"><i class="fa-solid fa-cart-shopping"></i>&nbsp;Checkout</a>
+                <a href="/invoices/cart/add/{{product.id}}/?next=/shop/#product-{{product.id}}" class="btn btn-light theme-bg-dark theme-text-light"><i class="fa-solid fa-cart-plus"></i>&nbsp;Add</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -97,8 +97,8 @@
         </div>
     </div>
 </section>
-<section id="features" class="theme-bg-warning">
-    <div class="container py-5">
+<section id="features" class="theme-bg-light">
+    <div class="container pt-5">
         <div class="row mt-5 mb-5">
             <div class="col-12">
                 <h1 class="text-center"><span class="theme-text-warning">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span><span
@@ -109,7 +109,8 @@
             <div class="col-12 mb-5">
                 <div class="row">
                     <div class="col-lg-2 col-4">
-                        <img src="/static/website/media/paw.png" alt="" class="d-inline square-100">
+                        <img src="/static/website/media/paw.png" alt=""
+                            class="d-inline square-100 theme-bg-dark rounded-circle">
                     </div>
                     <div class="col-lg-10 col-8">
                         <p>
@@ -154,7 +155,8 @@
             <div class="col-12 mb-5">
                 <div class="row">
                     <div class="col-lg-2 col-4">
-                        <img src="/static/website/media/paw.png" alt="" class="d-inline square-100">
+                        <img src="/static/website/media/paw.png" alt=""
+                            class="d-inline square-100 theme-bg-dark rounded-circle">
                     </div>
                     <div class="col-lg-10 col-8">
                         <p>
@@ -209,7 +211,8 @@
             <div class="col-12 mb-5">
                 <div class="row">
                     <div class="col-lg-2 col-4">
-                        <img src="/static/website/media/paw.png" alt="" class="d-inline square-100">
+                        <img src="/static/website/media/paw.png" alt=""
+                            class="d-inline square-100 theme-bg-dark rounded-circle">
                     </div>
                     <div class="col-lg-10 col-8">
                         <p>
@@ -250,11 +253,12 @@
                 </p>
             </div>
         </div>
-        <div class="row mb-5">
+        <div class="row">
             <div class="col-12 mb-5">
                 <div class="row">
                     <div class="col-lg-2 col-4">
-                        <img src="/static/website/media/paw.png" alt="" class="d-inline square-100">
+                        <img src="/static/website/media/paw.png" alt=""
+                            class="d-inline square-100 theme-bg-dark rounded-circle">
                     </div>
                     <div class="col-lg-10 col-8">
                         <p>
@@ -318,8 +322,28 @@
         </div>
     </div>
 </section>
-<section id="customize" class="theme-bg-secondary">
-    <style>
+<section id="featured" class="theme-bg-light">
+    <div class="container pt-5">
+        <div class="row mt-5 mb-5">
+            <div class="col-12">
+                <h1 class="text-center"><span class="theme-text-warning">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+                        class="text-decoration-underline">FEATUR</span>ED PRODUCTS</h1>
+            </div>
+        </div>
+        {% with featured_products as products_list %}
+        {% include 'website/components/products.html' %}
+        {% endwith %}
+        <div class="row mb-5">
+            <div class="col-12 px-lg-5 mb-5">
+                <p class="text-center">
+                    <a href="/shop/" class="btn btn-light theme-bg-dark theme-text-light"><i class="fa-solid fa-shop"></i>&nbsp;Shop More</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="customize" class="theme-bg-light d-none">
+    <!-- <style>
         #navbar,
         #footer,
         #hero,
@@ -329,9 +353,9 @@
         #faq {
             display: none;
         }
-    </style>
+    </style> -->
     <div class="container">
-        <div class="row py-5">
+        <div class="row pb-5">
             <div class="col-12">
                 <h1 class="text-center mb-5">
                     <span class="theme-text-warning">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -346,17 +370,17 @@
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
-                            <td class="" rowspan="7"
+                            <td class="" rowspan="8"
                                 style="background-color: var(--accent); border-top-right-radius: 24px; border-bottom-right-radius: 24px; width: 80px;">
                             </td>
                             <td class="py-5"></td>
                         </tr>
 
-                        {% for i in '1234' %}
+                        {% for i in '123456' %}
                         <tr>
                             <td class="" style="transform: translateX(-40px);">
                                 <div class="d-inline-flex rounded-pill">
-                                    <div class="btn rounded-circle p-0 m-0 square-80 theme-bg-accent shadow" >
+                                    <div class="btn rounded-circle p-0 m-0 square-80 theme-bg-accent shadow">
                                         <img src="/static/website/media/paw.png" alt="" class="square-80 rounded-circle">
                                     </div>
                                     <div class="theme-bg-accent min-h-100 d-none">
@@ -366,7 +390,7 @@
                                             <img src="/static/website/media/paw.png" alt="" class="square-80">
                                         </button> -->
                                         {% endfor %}
-                                            
+
                                     </div>
                                 </div>
                             </td>
@@ -388,6 +412,50 @@
 
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="row m-0 justify-content-end" style="transform: translateY(-100%);">
+            <div class="col-lg-4 float-end px-0 theme-bg-secondary" style="border-top-left-radius: 24px;">
+                <div style="transform: translateY(-50%);">
+                    <h2 class="text-center">
+                        CART&nbsp;
+                        <span class="theme-bg-secondary rounded-circle px-1"
+                            style="border: 1px solid var(--light); font-size: smaller;">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </span>
+                    </h2>
+                </div>
+                <div>
+                    {% for i in '123' %}
+                    <div class="row p-0 m-0 mb-3">
+                        <div class="col-6 offset-6">
+                            <table class="w-100">
+                                <tbody>
+                                    <tr>
+                                        <td class="border-bottom border-white text-end">Hello Medium</td>
+                                        <td rowspan="2">
+                                            <img src="/static/website/media/paw.png" class="square-40" alt="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-end"><b>499€</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="row m-0 p-0 mb-3 border-top border-white">
+                        <div class="col-6 offset-6 p-0 m-0">
+                            <p class="text-end">
+
+                                Summe&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1145€ 
+                                <img src="/static/website/media/paw.png" class="square-40" alt="">
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -452,7 +520,7 @@
         </div>
     </div>
 </section>
-<section id="couch-bg" class="d-none">
+<section id="couch-bg" class="">
     <div class="container-fluid m-0 p-0">
         <img src="/static/website/media/couch.jpg" class="w-100" alt="" style="height: 400px;">
     </div>

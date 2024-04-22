@@ -1,21 +1,23 @@
+from __future__ import annotations
 from decimal import Decimal as D
-# import typing
-# import datetime
+import time
 from enum import Enum
-from typing import Iterable
-
+import logging
 
 from django.db import models
 # from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.hashers import make_password
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError
+from django.core.handlers.wsgi import WSGIRequest
 
 from .base import Base
 from .fields import ImageField
 
 
 class User(AbstractUser, Base):
+    _password: str = None
     str_prefix = "U"
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -27,10 +29,13 @@ class User(AbstractUser, Base):
     image = ImageField(upload_to="user_images", blank=True, null=True)
     phone = models.CharField(max_length=32, blank=True, null=True)
     gender = models.CharField(
-        max_length=1, choices=Base.iter_as_choices(*Genders), blank=True, null=True
+        max_length=1,
+        choices=Base.iter_as_choices(*Genders, f=Base.get_enum_value),
+        blank=True,
+        null=True
     )
     date_of_birth = models.DateField(blank=True, null=True)
-    # address = models.TextField(blank=True, null=True, max_length=1024)
+    address = models.TextField(blank=True, null=True, max_length=1024)
     username = None
 
     def __str__(self):
@@ -46,18 +51,32 @@ class User(AbstractUser, Base):
 
     @property
     def active_invoice(self):
-        return Invoice.objects.get_or_create(customer_id=self.pk, checked_out=False)[0]
+        return Invoice.objects.get_or_create(
+            customer_id=self.pk, checked_out=False
+        )[0]
+
+    def save(self, *args, **kwargs) -> None:
+        if self.password and (len(self.password) != 88):
+            self._password = self.password
+            self.password = make_password(self.password)
+        return super().save(*args, **kwargs)
 
     def after_save(self, is_creation: bool):
         self.active_invoice
+        if self._password:
+            try:
+                self.email_user(
+                    subject="HHH Password",
+                    message=f"Your new password is {self._password}."
+                )
+            except:
+                logging.error(f"Failed to send password email to {self.email}")
         return super().after_save(is_creation)
 
 
 class Customer(User):
     class Meta:
         proxy = True
-
-    
 
 
 class Category(Base):
@@ -94,20 +113,50 @@ class Product(Base):
 
 
 class Invoice(Base):
-    customer = models.ForeignKey(User, on_delete=models.PROTECT)
+    str_prefix = "INV"
+    customer = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True
+    )
+    session_id = models.CharField(max_length=256, blank=True, null=True)
     checked_out = models.BooleanField(default=False)
+    # paid = models.BooleanField(default=False)
     items_count = models.PositiveSmallIntegerField(default=0)
     total = models.DecimalField(
-        max_digits=32, decimal_places=2, default=D("0.00"))
-    paid = models.DecimalField(
-        max_digits=32, decimal_places=2, default=D("0.00"))
+        max_digits=32,
+        decimal_places=2,
+        default=D("0.00")
+    )
+    amount_paid = models.DecimalField(
+        max_digits=32,
+        decimal_places=2,
+        default=D("0.00")
+    )
+    checkout_email = models.EmailField(max_length=256, blank=True, null=True)
+    checkout_password = models.CharField(max_length=32, blank=True, null=True)
+    checkout_address = models.TextField(blank=True, null=True, max_length=1024)
 
-    def __str__(self):
-        return f"{self.str_id} - {self.customer}"
+    @cached_property
+    def invoice_email(self):
+        return self.checkout_email or (
+            self.customer.email if self.customer else None
+        )
+
+    @cached_property
+    def invoice_address(self):
+        return self.checkout_address or (
+            self.customer.address if self.customer else ""
+        )
+
+    @cached_property
+    def invoice_items(self):
+        return InvoiceItem.objects.filter(invoice=self)
 
     @cached_property
     def items(self):
-        return InvoiceItem.objects.filter(invoice=self)
+        return self.invoice_items.select_related("product")
 
     @cached_property
     def payments(self):
@@ -115,39 +164,89 @@ class Invoice(Base):
 
     @cached_property
     def items_total(self):
-        return self.items.aggregate(sm=models.Sum("line_total"))["sm"] or D("0.00")
+        return self.invoice_items.aggregate(
+            sm=models.Sum("line_total")
+        )["sm"] or D("0.00")
 
-    @cached_property
-    def items_count(self):
-        return self.items.count()
+    def get_items_count(self):
+        return self.invoice_items.count()
 
-    def sync_paid(self):
+    def sync_amount_paid(self):
         Invoice.objects.filter(id=self.pk).update(
-            paid=self.payments.filter(status=Payment.completed).aggregate(
+            amount_paid=self.payments.filter(status=Payment.Statuses.completed).aggregate(
                 sm=models.Sum("amount"))["sm"] or D("0.00")
         )
 
     def sync_total_and_count(self):
         Invoice.objects.filter(id=self.pk).update(
-            total=self.items_total, items_count=self.items_count
+            total=self.items_total, items_count=self.get_items_count()
         )
+
+    def set_checkout_values(self):
+        if self.customer:
+            self.checkout_email = self.checkout_email or self.customer.email
+            self.checkout_address = self.checkout_address or self.customer.address
+
+    def set_customer_values(self):
+        if not self.customer and self.checkout_email:
+            if not User.objects.filter(email=self.checkout_email).exists():
+                u = User(
+                    email=self.checkout_email,
+                    address=self.checkout_address,
+                    password=(
+                        self.checkout_password or
+                        User.objects.make_random_password(8)
+                    )
+                )
+                u.save()
+                self.checkout_password = u._password
+                self.customer = u
+                logging.info(f"Created customer {u} from invoice {self}")
+
+    def save(self, *args, **kwargs) -> None:
+        self.set_checkout_values()
+        self.set_customer_values()
+        return super().save(*args)
 
     def after_save(self, is_creation: bool):
         super_after_save = super().after_save(is_creation)
         self.sync_total_and_count()
+        self.sync_amount_paid()
         return super_after_save
+    
+    def checkout(self, checkout_email: str, checkout_password: str, checkout_address: str):
+        if not self.customer:
+            self.checkout_address = checkout_address
+            self.checkout_password = checkout_password
+            self.checkout_email = checkout_email
+        self.checked_out = True
+        return self.save()
+    
+    def cancel_checkout(self, **kwargs):
+        self.checked_out = False
+        return self.save()
 
-    def update_items(self, product: Product, qty: int, action: str | None = None):
-        item_in_invoice = self.items.filter(product=product).first()
-        if item_in_invoice:
-            if qty:
-                item_in_invoice.qty = qty
-                item_in_invoice.save()
-                return item_in_invoice
-            else:
-                item_in_invoice.delete()
-        else:
-            return InvoiceItem.objects.create(invoice=self, product=product, qty=qty)
+    @classmethod
+    def create_active_invoice_session_id(cls):
+        session_id = f"{User.objects.make_random_password(8)}-{time.time()}"
+        while Invoice.objects.filter(session_id=session_id).exists():
+            return cls.create_active_invoice_session_id()
+        return session_id
+
+    @classmethod
+    def get_active_invoice(cls, request: WSGIRequest) -> Invoice:
+        if request.user.is_authenticated:
+            return request.user.active_invoice
+        try:
+            return Invoice.objects.get(
+                session_id=request.session["active_invoice"],
+                checked_out=False
+            )
+        except:
+            session_id = cls.create_active_invoice_session_id()
+            request.session["active_invoice"] = session_id
+            return Invoice.objects.create(session_id=session_id)
+        
 
 
 class InvoiceItem(Base):
@@ -177,9 +276,20 @@ class InvoiceItem(Base):
         super().clean()
         self.clean_invoice()
 
+    def get_existing(self):
+        if not self.id:
+            item = self.invoice.invoice_items.filter(
+                product=self.product).first()
+            if item:
+                item.qty = self.qty
+                return item
+
     def save(self, *args, **kwargs):
         self.set_unit_price()
         self.set_line_total()
+        item = self.get_existing()
+        if item:
+            return item.save()
         return super().save(*args, **kwargs)
 
     def validate_invoice_checked_out(self):
@@ -193,14 +303,18 @@ class InvoiceItem(Base):
         self.invoice.sync_total_and_count()
         return super_after_save
 
+    def delete(self, *args, **kwargs) -> tuple[int, dict[str, int]]:
+        super_delete = super().delete(*args, **kwargs)
+        self.invoice.sync_total_and_count()
+        return super_delete
+
 
 class Payment(Base):
     str_prefix = "Payment"
 
     class Statuses(str, Enum):
         pending, cancelled, completed = "Pending", "Cancelled", "Completed"
-    
-    
+
     class Methods(str, Enum):
         cash, stripe = "Cash", "Stripe"
 
@@ -210,7 +324,7 @@ class Payment(Base):
     invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT)
     method = models.CharField(
         max_length=64,
-        choices=Base.iter_as_choices(Methods.cash, Methods.stripe)
+        choices=Base.iter_as_choices(*Methods, f=Base.get_enum_value)
     )
     status = models.CharField(
         max_length=64,
@@ -219,26 +333,42 @@ class Payment(Base):
     gateway_id = models.CharField(max_length=256, blank=True, null=True)
     gateway_url = models.URLField(max_length=512, blank=True, null=True)
 
+    def after_save(self, is_creation: bool):
+        super_after_save = super().after_save(is_creation)
+        self.invoice.sync_amount_paid()
+        return super_after_save
+
+    def delete(self, *args, **kwargs) -> tuple[int, dict[str, int]]:
+        super_delete = super().delete(*args, **kwargs)
+        self.invoice.sync_amount_paid()
+        return super_delete
+
 
 class Settings(Base):
     class Currencies(str, Enum):
-        euro, usd = "euro", "usd"
+        euro, usd = "eur", "usd"
 
     featured_products = models.ManyToManyField(Product, blank=True)
     currency = models.CharField(
         max_length=16,
         default=Currencies.euro,
-        choices=Base.iter_as_choices(*Currencies)
+        choices=Base.iter_as_choices(*Currencies, f=Base.get_enum_value)
     )
+
+    @cached_property
+    def currency_symbol(self):
+        if self.currency == self.Currencies.euro:
+            return "€"
+        return "$"
 
     @cached_property
     def categories(self):
         return Category.objects.all()
-    
+
     def clean_id(self):
         if not self.id and Settings.objects.exists():
-            raise ValidationError("You can only have one settings.") 
-    
+            raise ValidationError("You can only have one settings.")
+
     def save(self, *args, **kwargs) -> None:
         self.clean_id()
         return super().save(*args, **kwargs)

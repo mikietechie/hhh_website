@@ -10,7 +10,7 @@ class Base(models.Model):
     class Meta:
         abstract = True
     
-    str_prefix: str
+    str_prefix: str = ""
     creation_date = models.DateField(auto_now_add=True)
     creation_timestamp = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateField(auto_now=True)
@@ -26,6 +26,9 @@ class Base(models.Model):
             related_name="updated_%(app_label)s_%(class)ss",
         )
     )
+
+    def __str__(self) -> str:
+        return self.sm_str
     
     @property
     def sys_name(self):
@@ -40,8 +43,17 @@ class Base(models.Model):
         return str(self.pk).rjust(8, "0")
 
     @classmethod
-    def iter_as_choices(cls, *args):
-        return tuple([(i, i) for i in args])
+    def iter_as_choices(cls, *args, f: callable = lambda i: i):
+        return tuple([(f(i), f(i)) for i in args])
+    
+    @classmethod
+    def get_enum_value(cls, e):
+        return e.value
+    
+    def save(self, *args, **kwargs) -> None:
+        is_creation = not bool(self.pk)
+        super().save(*args, **kwargs)
+        self.after_save(is_creation)
     
     def after_save(self, is_creation: bool, **kwargs):
         pass

@@ -1,0 +1,158 @@
+{% extends "website/layout.html" %}
+
+{% block content %}
+<section id="cart" class="h-100 h-custom theme-bg-light mb-5">
+    <div class="container py-5 h-100">
+        <div class="row mt-5 mb-5">
+            <div class="col-12">
+                <h1 class="text-center"><span class="theme-text-warning">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+                        class="text-decoration-underline">CAR</span>T</h1>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12">
+                <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <div class="col-lg-8">
+                                <div class="p-5">
+                                    <div class="d-flex justify-content-between align-items-center mb-5">
+                                        <h3 class="fw-bold mb-0 ">
+                                            {{cart.sm_str}}
+                                        </h3>
+                                        <h6 class="mb-0 text-muted">{{cart.items_count}} items</h6>
+                                    </div>
+                                    <hr class="my-4">
+
+                                    {% for item in cart.items %}
+
+                                    <div class="row mb-4 d-flex justify-content-between align-items-center"
+                                        id="cartitem-{{item.id}}">
+                                        <div class="col-md-2 col-lg-2 col-xl-2">
+                                            <img src="{{item.product.image.url}}" class="img-fluid rounded-3"
+                                                alt="{{item.product.name}}">
+                                        </div>
+                                        <div class="col-md-3 col-lg-3 col-xl-3">
+                                            <h6 class="text-muted">{{item.product.name}}</h6>
+                                            <h6 class=" mb-0">{{item.product.description}}</h6>
+                                        </div>
+                                        <form class="col-md-3 col-lg-3 col-xl-2 d-flex" method="get"
+                                            action="/invoices/cart/update/{{item.id}}/"
+                                            onchange="this.querySelector('button[type=submit]').classList.remove('d-none')">
+                                            <input type="hidden" name="next" value="/cart/#cartitem-{{item.id}}">
+                                            <button class="btn theme-text-dark px-2" type="button"
+                                                onclick="this.parentNode.querySelector('input[type=number]').stepDown(); this.parentNode.onchange();">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+
+                                            <input id="form1" min="1" name="qty" value="{{item.qty}}"
+                                                max="{{item.product.stock_qty}}" type="number"
+                                                class="form-control form-control-sm" style="min-width: 50px;" />
+
+                                            <button class="btn theme-text-dark px-2" type="button"
+                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp(); this.parentNode.onchange();">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                            <button class="btn theme-text-success px-2 d-none" type="submit">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                            </button>
+                                        </form>
+                                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                            <h6 class="mb-0">{{app_settings.currency_symbol}} {{item.line_total}}</h6>
+                                        </div>
+                                        <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                            <a href="/invoices/cart/remove/{{item.id}}/?next=/cart/#cartitem-{{item.id}}"
+                                                class="text-muted">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    {% endfor %}
+
+                                    <div class="pt-5">
+                                        <h6 class="mb-0">
+                                            <a href="/shop/" class="text-body">
+                                                <i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 bg-grey">
+                                <form class="p-5" action="/invoices/checkout/{{cart.id}}/" method="get">
+                                    <h3 class="fw-bold mb-5 mt-2 pt-1">Details</h3>
+                                    <hr class="my-4">
+
+                                    <div class="d-flex justify-content-between mb-4">
+                                        <h5 class="text-uppercase">items {{cart.items_count}}</h5>
+                                        <h5>{{app_settings.currency_symbol}} {{cart.total}}</h5>
+                                    </div>
+
+                                    <!-- <h5 class="text-uppercase mb-3">Shipping</h5>
+
+                                    <div class="mb-4 pb-2">
+                                        <select data-mdb-select-init>
+                                            <option value="1">Standard-Delivery- €5.00</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                            <option value="4">Four</option>
+                                        </select>
+                                    </div> -->
+
+                                    <!-- <h5 class="text-uppercase mb-3">Email</h5> -->
+
+
+                                    {% if not request.user.is_authenticated %}
+                                    <p class="mb-3">
+                                        It looks like you are not signed in! Please sign in or sign up.
+                                    </p>
+                                    <div class="mb-3">
+                                        <div class="form-outline">
+                                            <input type="text" name="checkout_email" id="checkout_email"
+                                                class="form-control form-control-lg" required/>
+                                            <label class="form-label" for="email">Enter your Email</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="form-outline">
+                                            <input type="text" name="checkout_password" id="checkout_password"
+                                                class="form-control form-control-lg"/>
+                                            <label class="form-label" for="password">Enter your Password</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+
+                                    <div class="mb-3">
+                                        <div class="form-outline">
+                                            <textarea name="checkout_address" id="checkout_address"
+                                                class="form-control form-control-lg" required>{% firstof cart.checkout_address request.user.address '' %}</textarea>
+                                            <label class="form-label" for="checkout_address">Enter your Address</label>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    <div class="d-flex justify-content-between mb-5">
+                                        <h5 class="text-uppercase">Total price</h5>
+                                        <h5>{{app_settings.currency_symbol}} {{cart.total}}</h5>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-block btn-lg theme-bg-dark theme-text-light">
+                                        <i class="fa-brands fa-stripe"></i>&nbsp;Pay
+                                    </button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
