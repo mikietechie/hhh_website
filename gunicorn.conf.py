@@ -1,7 +1,9 @@
 from pathlib import Path
+import os
+
 ## THREADS and Workers
-workers = 3
-threads = 3
+workers = int(os.environ.get("WORKERS", 1))
+threads = int(os.environ.get("THREADS", 3))
 
 ## PORTS
 bind = '0.0.0.0:8000'
