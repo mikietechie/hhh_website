@@ -1,0 +1,18 @@
+{% extends "website/layout.html" %}
+
+{% block content %}
+<section id="shop" class="theme-bg-light">
+    <div class="container-fluid py-5">
+        <div class="row mt-5 mb-5">
+            <div class="col-12">
+                <h1 class="text-center"><span class="theme-text-warning">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+                        class="text-decoration-underline">SHO</span>P</h1>
+            </div>
+        </div>
+        
+        {% with products as products_list %}
+        {% include 'website/components/products.html' %}
+        {% endwith %}
+    </div>
+</section>
+{% endblock content %}

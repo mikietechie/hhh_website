@@ -1,0 +1,44 @@
+# docker compose -f "docker-compose.yml" up -d --build
+# docker compose -f "docker-compose.yml" down
+# docker exec -it containerid /bin/bash
+# docker exec -it postgres /bin/bash
+
+services:
+  # .env must have POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_USER
+  db:
+    image: postgres
+    volumes:
+      # - ./data/db:/var/lib/postgresql/data
+      - postgres_volume:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      DATABASE_PORT: 5432
+      DATABASE_HOST: db
+      DATABASE_BACKEND: django.db.backends.postgresql
+    # command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      # - .:/hhh_website
+      # - static_volume:/root/hhh_website/static
+      # - media_volume:/root/hhh_website/media
+      - /root/hhh_website/static:/hhh_website/static
+      - /root/hhh_website/media:/hhh_website/media
+      # - /root/hhh_website/media:/hhh_website/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_volume:
+  # static_volume:
+  # media_volume:

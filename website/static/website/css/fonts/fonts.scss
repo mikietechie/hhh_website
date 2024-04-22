@@ -1,0 +1,27 @@
+$size-units: px, rem, em;
+$hundreds: 100, 200, 300, 400, 500, 600, 700, 800, 900;
+
+@each $size in $hundreds {
+  .font-weight-#{$size} {
+    font-weight: $size;
+  }
+}
+
+
+// $letter-spacing-sizes: 1,2,3,4,5,6,7,8,9,10;
+// @each $size in $letter-spacing-sizes {
+//   .letter-spacing-#{$size} {
+//     letter-spacing: #{$size};
+//   }
+//   @each $size-unit in $size-units {
+//     .letter-spacing-#{$size-unit}-#{$size} {
+//       letter-spacing: #{$size/2}#{$size-unit};
+//     }
+//   }
+// }
+
+.abril-fatface {
+  font-family: "Abril Fatface", serif;
+  font-style: normal;
+}
+

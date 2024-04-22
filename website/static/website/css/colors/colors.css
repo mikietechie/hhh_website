@@ -1,0 +1,83 @@
+:root {
+  --white:#ffffff;
+  --black:#000000;
+  --light:#e8e6e1;
+  --warning:#cb9a7d;
+  --tertiary:#050300;
+  --success:#648072;
+  --dark:#3b2a33;
+  --secondary: #c9bab1;
+  --accent: #857371;
+}
+
+.theme-text-white {
+  color: var(--white);
+}
+
+.theme-bg-white {
+  background-color: var(--white);
+}
+
+.theme-text-black {
+  color: var(--black);
+}
+
+.theme-bg-black {
+  background-color: var(--black);
+}
+
+.theme-text-light {
+  color: var(--light);
+}
+
+.theme-bg-light {
+  background-color: var(--light);
+}
+
+.theme-text-warning {
+  color: var(--warning);
+}
+
+.theme-bg-warning {
+  background-color: var(--warning);
+}
+
+.theme-text-tertiary {
+  color: var(--tertiary);
+}
+
+.theme-bg-tertiary {
+  background-color: var(--tertiary);
+}
+
+.theme-text-success {
+  color: var(--success);
+}
+
+.theme-bg-success {
+  background-color: var(--success);
+}
+
+.theme-text-dark {
+  color: var(--dark);
+}
+
+.theme-bg-dark {
+  background-color: var(--dark);
+}
+
+.theme-text-secondary {
+  color: var(--secondary);
+}
+
+.theme-bg-secondary {
+  background-color: var(--secondary);
+}
+
+.theme-text-accent {
+  color: var(--accent);
+}
+
+.theme-bg-accent {
+  background-color: var(--accent);
+}/*# sourceMappingURL=colors.css.map */

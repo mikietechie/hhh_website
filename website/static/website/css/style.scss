@@ -1,0 +1,78 @@
+body {
+    color: var(--dark);
+    background-color: var(--light);
+}
+
+h1,
+h2 {
+    font-family: "Abril Fatface", serif;
+    font-style: normal;
+}
+
+h1 {
+    letter-spacing: 0.3rem;
+    font-weight: 700;
+
+    .text-decoration-underline {
+        text-underline-offset: 16px;
+        text-decoration-thickness: 0.1rem;
+    }
+}
+
+#navbar {
+    a {
+        text-decoration: none;
+        color: var(--dark);
+    }
+}
+
+// #hero {
+// }
+
+#about {
+    background-image: url("/static/website/media/aboutbg.png");
+    background-position: top left;
+    background-repeat: no-repeat;
+    // border-top-left-radius: 188px;
+}
+
+#features {
+    padding-bottom: 100px;
+}
+
+#faq {
+    // .container {
+    //     .row {}
+    // }
+
+    @media (min-width:992px) {
+        .col-lg-5 {
+            background-color: var(--white);
+            border: 5px solid var(--light);
+            // position: absolute;
+        }
+
+        .col-lg-5:nth-of-type(2) {
+            transform: translateY(-50%);
+        }
+
+        .col-lg-5:nth-of-type(3) {
+            transform: translateY(-100%);
+        }
+
+        .col-lg-5:nth-of-type(4) {
+            transform: translateY(-150%);
+        }
+    }
+}
+
+#footer {
+    padding-top: 300px;
+    * {
+        color: var(--white);
+        text-decoration: none;
+    }
+    input {
+      color: var(--dark) !important;
+    }
+}

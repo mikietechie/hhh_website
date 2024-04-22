@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="googlebot" content="index, follow" />
+    <meta name="Revist-After" content="">
+    <meta name="country" content="">
+    <meta name="subject" content="">
+    <meta name="author" content="Mike Zinyoni mzinyoni7@outlook.com">
+    <meta name="copyright" content="Mike Zinyoni">
+
+    <meta name="og:title" content="" />
+    <meta name="og:type" content="" />
+    <meta name="og:url" content="" />
+    <meta name="og:image" content="" />
+    <meta name="og:site_name" content="" />
+    <meta name="og:description" content="" />
+
+    <meta name="author" content="Mike Zinyoni mzinyoni7@outlook.com">
+    <title>{% block title %}HHH | Home{% endblock title %}</title>
+    <link rel="stylesheet" href="/static/website/lib/bootstrap5/css/flatly.bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="/static/website/lib/fontawesome/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/website/css/colors/colors.css" />
+    <link rel="stylesheet" href="/static/website/css/fonts/fonts.css" />
+    <link rel="stylesheet" href="/static/website/css/utils/utils.css" />
+    <link rel="stylesheet" href="/static/website/css/style.css" />
+    {% block style %}{% endblock style %}
+</head>
+
+<body>
+    {% block body %}
+    <section id="navbar" class="">
+        <div class="container-fluid nav-large d-none d-lg-block">
+            <div class="row py-4 px-lg-4">
+                <div class="col-lg-4">
+                    <div class="text-start mt-3">
+                        <span class="opacity-0 pb-1">Hello World</span>
+                        <br>
+                        <span class="theme-bg-secondary py-1 px-2 rounded">
+                            <a href="/shop/" class="pe-2">SHOP</a></li>
+                            <a href="/#featured" class="pe-2">FEATURED</a></li>
+                            <a href="/#features" class="pe-2">FEATURES</a></li>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <a href="/"><img src="/static/website/media/HHH_Logo.svg" alt="HHH Official Logo"></a>
+                </div>
+                <div class="col-lg-4">
+                    <div class="text-end mt-3">
+                        <span class="pe-1 pb-1">
+
+                            {% if user.is_authenticated %}
+                            <a href="#!" class="">{{user}}</a></li>
+                            {% else %}
+                            <a href="#signinup-form" class="">Login</a></li>
+                            {% endif %}
+
+                            <a href="#!" class="mx-1">EN</a></li>
+                            <a href="#!" class="">DE</a></li>
+                        </span>
+                        <br>
+                        <span class="theme-bg-secondary py-1 px-2 rounded me-1">
+                            <a href="/#about" class="pe-2">ABOUT</a></li>
+                            <a href="/#faq" class="pe-2">FAQ</a></li>
+                            <a href="/#contact" class="pe-2">CONTACT</a></li>
+                        </span>
+                        <span class="theme-bg-secondary py-1 px-2 rounded-pill">
+                            <a href="/cart/" class="px-2"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid d-lg-none">
+            <div class="row">
+                <div class="col-12 pt-2" style="transform: translateY(100%); margin-top: -100%;">
+                    <div class="text-end">
+                        <a href="#menu" id="menu-btn" class=""><i class="fa-2x fa-solid fa-bars"></i></a>
+                    </div>
+                </div>
+                <div class="col-12 text-center">
+                    <a href="/" class="mx-auto"><img src="/static/website/media/HHH_Logo.svg" alt="HHH Official Logo"
+                            style="max-height: 80px;"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% block content %}{% endblock content %}
+    <section id="footer" class="theme-bg-dark">
+        <div class="container-fluid py-5">
+            <div class="row py-5">
+                <div class="col-lg-6 offset-lg-3">
+                    
+                    <div class="row pb-5 mb-5" style="border-bottom: 5px solid var(--warning)">
+                        {% if not user.is_authenticated %}
+                        <div class="col-12">
+                            <h1 class="taxt-center">
+                                <span style="color: var(--warning);">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                SIGN IN/UP
+                            </h1>
+                            <form action="/auth/signinup/?next=/shop/&current={{request.path}}#signinup-form" method="post" id="signinup-form">
+                                {% csrf_token %}
+                                <div class="form-group mb-3">
+                                    <label for="email" class="mb-1">Bleibe stets auf dem neuesten Stand.</label>
+                                    <input type="email" name="email" class="form-control" placeholder="E-mail" />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="password" class="mb-1">Password</label>
+                                    <input type="password" name="password" class="form-control" placeholder="Your Password" />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <input type="checkbox" name="hasaccount" class="checkbox square-30" placeholder="Your Password" />
+                                    <label for="hasaccount" class=" mb-1">Already have account</label>
+                                </div>
+                                <div class="text-center">
+                                    <button class="btn theme-bg-secondary" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% else %}
+                        <div class="col-12">
+                            <h1 class="taxt-center">
+                                <span style="color: var(--warning);">Ø&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                {{user}}
+                            </h1>
+                        </div>
+                        {% endif %}
+                    </div>
+                        
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>
+                                <a href="/#about">About</a>
+                            </p>
+                            <p>
+                                <a href="/#customize">FAQs</a>
+                            </p>
+                            <p>
+                                <a href="/#contact">Contact</a>
+                            </p>
+                            <p>
+                                <a href="/narrowroad/">Management</a>
+                            </p>
+                            <p>
+                                {% if user.is_authenticated %}
+
+                                <a href="/auth/logout/">Logout</a>
+                                {% else %}
+                                <a href="/auth/login/">Login</a>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <a href="">Versandoptionen</a>
+                            </p>
+                            <p>
+                                <a href="">AGBs</a>
+                            </p>
+                            <p>
+                                <a href="">Rückgaberecht</a>
+                            </p>
+                            <p>
+                                <a href="">Impressum</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endblock body %}
+</body>
+
+<script>
+    const $menuBtn = document.querySelector("a#menu-btn")
+    let menuOpened = false
+
+    $menuBtn.addEventListener("click", (e) => {
+        e.preventDefault()
+        menuOpened = !menuOpened
+        menuToggled()
+    })
+    const menuToggled = () => {
+        if (menuOpened) {
+            // change menu icon
+            // show menu drop down
+            alert("menu open")
+        } else {
+            // change menu icon
+            // hide menu drop down
+            alert("menu closed")
+        }
+    }
+</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        {% for message in messages %}
+        Toastify({
+            text: "{{message}}",
+            className: "info",
+            style: {
+                background: "var(--dark)",
+                color: "var(--light)",
+                "font-size": "24px"
+            }
+        }).showToast();
+        {% endfor %}
+    })
+</script>
+
+
+{% block scripts %}{% endblock scripts %}
+
+</html>
