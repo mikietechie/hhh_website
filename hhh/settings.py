@@ -101,12 +101,12 @@ REGISTER_URL = "/auth/register/"
 
 DATABASES = {
     'default': {
-        'ENGINE': env.get("DB_BACKEND") or "django.db.backends.sqlite3",
-        'NAME': env.get('BD_NAME') or BASE_DIR / 'db.sqlite3',
-        'USER': env.get('BD_USER'),
-        'PASSWORD': env.get('BD_PASSWORD'),
-        'HOST': env.get('BD_HOST'),
-        'PORT': env.get('BD_PORT')
+        'ENGINE': env.get("DATABASE_BACKEND") or "django.db.backends.sqlite3",
+        'NAME': env.get('DATABASE_NAME') or BASE_DIR / 'db.sqlite3',
+        'USER': env.get('DATABASE_USER'),
+        'PASSWORD': env.get('DATABASE_PASSWORD'),
+        'HOST': env.get('DATABASE_HOST'),
+        'PORT': env.get('DATABASE_PORT')
     }
 }
 
@@ -226,5 +226,5 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 # Stripe
-STRIPE_SECRET_KEY = "sk_test_51JdMRZEXsCI7ne3rrrKzr9jSVk5Kcu7h69M0K8ImgeW6MUZlOls5FnhkN3GJDGdU0MLJ0o96tR2emHnDPkK7kYsJ00LUBBdrt9"
-STRIPE_ENDPOINT_SECRET = "i eat pie"
+STRIPE_SECRET_KEY = env.get("STRIPE_SECRET_KEY")
+STRIPE_ENDPOINT_SECRET = env.get("STRIPE_ENDPOINT_SECRET")

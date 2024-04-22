@@ -16,7 +16,6 @@ def init_stripe():
         url=f"{settings.SITE_URL}/payments/stripe/webhook/",
     )
 
-
 # init_stripe()
 
 
