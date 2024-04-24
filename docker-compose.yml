@@ -30,8 +30,9 @@ services:
       # - .:/hhh_website
       # - static_volume:/root/hhh_website/static
       # - media_volume:/root/hhh_website/media
-      - /root/hhh_website/static:/hhh_website/static
-      - /root/hhh_website/media:/hhh_website/media
+      - ./static:/hhh_website/static
+      - ./media:/hhh_website/media
+      - ./logs:/hhh_website/logs
       # - /root/hhh_website/media:/hhh_website/media
     ports:
       - "8000:8000"

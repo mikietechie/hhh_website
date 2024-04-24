@@ -9,7 +9,7 @@ threads = int(os.environ.get("THREADS", 3))
 bind = '0.0.0.0:8000'
 
 ## LOGGING
-logs_path = "./media/logs"
+logs_path = "./logs"
 Path(logs_path).mkdir(parents=True, exist_ok=True)
 # Access log - records incoming HTTP requests
 accesslog =  logs_path + "/gunicorn.access.log"
