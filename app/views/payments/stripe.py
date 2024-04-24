@@ -7,27 +7,6 @@ from app.models import Payment, Invoice, Settings
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
-WEBHOOK_SECRET = settings.STRIPE_ENDPOINT_SECRET
-
-
-def init_stripe_webhooks():
-    # TODO: figure out a way to create only one item
-    webhook_url = f"{settings.SITE_URL}/payments/stripe/webhook/"
-    web_hooks = stripe.WebhookEndpoint.list()
-    for i in web_hooks.data:
-        if i.get("url") == webhook_url:
-            return
-    webhook_endpoint = stripe.WebhookEndpoint.create(
-        enabled_events=["charge.succeeded", "charge.failed"],
-        url=webhook_url,
-    )
-    WEBHOOK_SECRET = webhook_endpoint.secret
-
-
-try:
-    init_stripe_webhooks()
-except:
-    pass
 
 
 def create_checkout_session(request, invoice_id: int):
@@ -68,12 +47,13 @@ def create_checkout_session(request, invoice_id: int):
                 "invoice_id": invoice.pk
             }
         )
+        print(checkout_session)
         Payment.objects.create(
             amount=checkout_session["amount_total"],
             invoice=invoice,
             method="stripe",
             status=Payment.Statuses.pending,
-            gateway_id=checkout_session["id"],
+            gateway_id=checkout_session.payment_intent.id,
             gateway_url=checkout_session["url"],
         )
         return HttpResponseRedirect(checkout_session.url)
@@ -84,15 +64,13 @@ def create_checkout_session(request, invoice_id: int):
 
 @csrf_exempt
 def stripe_webhook(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    endpoint_secret = WEBHOOK_SECRET
     print(request.body)
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
     try:
         event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
+            payload, sig_header, settings.STRIPE_ENDPOINT_SECRET
         )
         print(event)
     except ValueError as e:
@@ -101,7 +79,7 @@ def stripe_webhook(request):
     except stripe.error.SignatureVerificationError as e:
         print(e)
         return HttpResponse(status=400)
-    payment = Payment.objects.get(id=event["data"]["payment_id"])
+    payment = Payment.objects.get(gateway_id=event.data.object.payment_intent)
     if event['type'] == 'checkout.session.completed':
         print("Payment was successful.")
         payment.status = Payment.completed
