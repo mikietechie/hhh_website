@@ -6,8 +6,8 @@ import stripe
 from app.models import Payment, Invoice, Settings
 
 
-
 stripe.api_key = settings.STRIPE_SECRET_KEY
+WEBHOOK_SECRET = settings.STRIPE_ENDPOINT_SECRET
 
 
 def init_stripe_webhooks():
@@ -17,15 +17,18 @@ def init_stripe_webhooks():
     for i in web_hooks.data:
         if i.get("url") == webhook_url:
             return
-    stripe.WebhookEndpoint.create(
+    webhook_endpoint = stripe.WebhookEndpoint.create(
         enabled_events=["charge.succeeded", "charge.failed"],
         url=webhook_url,
     )
+    WEBHOOK_SECRET = webhook_endpoint.secret
+
 
 try:
     init_stripe_webhooks()
 except:
     pass
+
 
 def create_checkout_session(request, invoice_id: int):
     try:
@@ -82,7 +85,7 @@ def create_checkout_session(request, invoice_id: int):
 @csrf_exempt
 def stripe_webhook(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
-    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+    endpoint_secret = WEBHOOK_SECRET
     print(request.body)
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
