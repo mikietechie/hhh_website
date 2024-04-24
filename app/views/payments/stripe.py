@@ -87,9 +87,12 @@ def stripe_webhook(request):
         event = stripe.Webhook.construct_event(
             payload, sig_header, endpoint_secret
         )
+        print(event)
     except ValueError as e:
+        print(e)
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError as e:
+        print(e)
         return HttpResponse(status=400)
     payment = Payment.objects.get(id=event["data"]["payment_id"])
     if event['type'] == 'checkout.session.completed':
