@@ -132,7 +132,7 @@ class Invoice(Base):
     # paid = models.BooleanField(default=False)
     status = models.CharField(
         max_length=64,
-        choices=Base.iter_as_choices(*Statuses),
+        choices=Base.iter_as_choices(*Statuses, f=Base.get_enum_value),
         default=Statuses.open
     )
     items_count = models.PositiveSmallIntegerField(default=0)
@@ -346,7 +346,7 @@ class Payment(Base):
     )
     status = models.CharField(
         max_length=64,
-        choices=Base.iter_as_choices(*Statuses),
+        choices=Base.iter_as_choices(*Statuses, f=Base.get_enum_value),
         default=Statuses.pending
     )
     gateway_id = models.CharField(max_length=256, blank=True, null=True)
