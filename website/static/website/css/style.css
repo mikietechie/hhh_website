@@ -18,9 +18,21 @@ h1 .text-decoration-underline {
   text-decoration-thickness: 0.1rem;
 }
 
+#navbar img#logo {
+  height: 60px;
+}
+@media (min-width: 992px) {
+  #navbar img#logo {
+    height: 80px;
+  }
+}
 #navbar a {
   text-decoration: none;
   color: var(--dark);
+}
+#navbar a:hover {
+  text-decoration: underline;
+  color: var(--warning);
 }
 
 #about {
@@ -34,6 +46,9 @@ h1 .text-decoration-underline {
 }
 
 @media (min-width: 992px) {
+  #faq {
+    margin-bottom: -300px;
+  }
   #faq .col-lg-5 {
     background-color: var(--white);
     border: 5px solid var(--light);

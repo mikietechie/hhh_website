@@ -20,9 +20,19 @@ h1 {
 }
 
 #navbar {
+    img#logo {
+        height: 60px;
+        @media (min-width: 992px) {
+            height: 80px;
+        }
+    }
     a {
         text-decoration: none;
         color: var(--dark);
+        &:hover {
+            text-decoration: underline;
+            color: var(--warning)
+        }
     }
 }
 
@@ -46,6 +56,9 @@ h1 {
     // }
 
     @media (min-width:992px) {
+        & {
+            margin-bottom: -300px;
+        }
         .col-lg-5 {
             background-color: var(--white);
             border: 5px solid var(--light);
