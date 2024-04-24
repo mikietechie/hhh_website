@@ -53,7 +53,7 @@ def create_checkout_session(request, invoice_id: int):
             invoice=invoice,
             method="stripe",
             status=Payment.Statuses.pending,
-            gateway_id=checkout_session.payment_intent.id,
+            gateway_id=checkout_session.id,
             gateway_url=checkout_session["url"],
         )
         return HttpResponseRedirect(checkout_session.url)
@@ -79,13 +79,14 @@ def stripe_webhook(request):
     except stripe.error.SignatureVerificationError as e:
         print(e)
         return HttpResponse(status=400)
-    payment = Payment.objects.get(gateway_id=event.data.object.payment_intent)
-    if event['type'] == 'checkout.session.completed':
+    checkout_session = stripe.checkout.Session.list(payment_intent=event.data.object.payment_intent).data[0]
+    payment = Payment.objects.get(gateway_id=checkout_session.id)
+    if event['type'] == 'charge.succeeded':
         print("Payment was successful.")
-        payment.status = Payment.completed
-        payment.amount = event["amount_total"]
+        payment.status = Payment.Statuses.completed
+        payment.amount = event.data.object.amount_captured / 100
         payment.save()
     else:
-        payment.status = Payment.cancelled
+        payment.status = Payment.Statuses.cancelled
         payment.save()
     return HttpResponse(status=200)
