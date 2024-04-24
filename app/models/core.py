@@ -118,6 +118,9 @@ class Product(Base):
 
 class Invoice(Base):
     str_prefix = "INV"
+    class Statuses(str, Enum):
+        open, pending, paid, completed = "Open", "Pending", "Paid", "Completed"
+
     customer = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -127,6 +130,11 @@ class Invoice(Base):
     session_id = models.CharField(max_length=256, blank=True, null=True)
     checked_out = models.BooleanField(default=False)
     # paid = models.BooleanField(default=False)
+    status = models.CharField(
+        max_length=64,
+        choices=Base.iter_as_choices(*Statuses),
+        default=Statuses.open
+    )
     items_count = models.PositiveSmallIntegerField(default=0)
     total = models.DecimalField(
         max_digits=32,
@@ -138,6 +146,7 @@ class Invoice(Base):
         decimal_places=2,
         default=D("0.00")
     )
+    order_status = models.CharField
     checkout_email = models.EmailField(max_length=256, blank=True, null=True)
     checkout_password = models.CharField(max_length=32, blank=True, null=True)
     checkout_address = models.TextField(blank=True, null=True, max_length=1024)
@@ -250,7 +259,12 @@ class Invoice(Base):
             session_id = cls.create_active_invoice_session_id()
             request.session["active_invoice"] = session_id
             return Invoice.objects.create(session_id=session_id)
-        
+    
+    def update_stock(self):
+        for i in self.items:
+            product = i.product
+            product.stock_qty -= i.qty
+            product.save()
 
 
 class InvoiceItem(Base):
@@ -288,6 +302,12 @@ class InvoiceItem(Base):
                 item.qty = self.qty
                 return item
 
+    def validate_invoice_checked_out(self):
+        if self.invoice.checked_out:
+            raise ValidationError(
+                f"Invoice has already been checkout out, you can't edit items anymore!"
+            )
+
     def save(self, *args, **kwargs):
         self.set_unit_price()
         self.set_line_total()
@@ -295,12 +315,6 @@ class InvoiceItem(Base):
         if item:
             return item.save()
         return super().save(*args, **kwargs)
-
-    def validate_invoice_checked_out(self):
-        if self.invoice.checked_out:
-            raise ValidationError(
-                f"Invoice has already been checkout out, you can't edit items anymore!"
-            )
 
     def after_save(self, is_creation: bool):
         super_after_save = super().after_save(is_creation)
@@ -332,13 +346,14 @@ class Payment(Base):
     )
     status = models.CharField(
         max_length=64,
-        choices=Base.iter_as_choices(*Statuses)
+        choices=Base.iter_as_choices(*Statuses),
+        default=Statuses.pending
     )
     gateway_id = models.CharField(max_length=256, blank=True, null=True)
     gateway_url = models.URLField(max_length=512, blank=True, null=True)
 
-    def after_save(self, is_creation: bool):
-        super_after_save = super().after_save(is_creation)
+    def after_save(self, is_creation: bool, **kwargs):
+        super_after_save = super().after_save(is_creation, **kwargs)
         self.invoice.sync_amount_paid()
         return super_after_save
 

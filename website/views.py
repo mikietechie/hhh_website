@@ -6,31 +6,31 @@ from django.contrib import messages
 from app.utils import get_cached
 from app.models import Product, Settings, Invoice
 
-def get_cached_settings() -> Settings:
-    return get_cached(
-        "app_settings",
-        lambda: Settings.objects.first(),
-        timeout=60*60
-    )
 
-# Create your views here.
+def get_cached_settings() -> Settings:
+    return get_cached("app_settings", lambda: Settings.objects.first(), timeout=60 * 60)
+
+
 def index_view(request: WSGIRequest):
     app_settings = get_cached_settings()
     featured_products = get_cached(
-        "featured_products",
-        lambda: app_settings.featured_products.all(),
-        timeout=60
+        "featured_products", lambda: app_settings.featured_products.all(), timeout=60
     )
-    return render(request, "website/index.html", {"featured_products": featured_products})
+    return render(
+        request,
+        "website/index.html",
+        {"featured_products": featured_products, "app_settings": app_settings},
+    )
 
 
 def shop_view(request: WSGIRequest):
-    products = get_cached(
-        "website_products",
-        lambda: Product.objects.all(),
-        timeout=60
+    app_settings = get_cached_settings()
+    products = get_cached("website_products", lambda: Product.objects.all(), timeout=60)
+    return render(
+        request,
+        "website/shop.html",
+        {"products": products, "app_settings": app_settings},
     )
-    return render(request, "website/shop.html", {"products": products})
 
 
 def cart_view(request: WSGIRequest):
@@ -39,4 +39,6 @@ def cart_view(request: WSGIRequest):
     if not cart.items_count:
         messages.warning(request, f"Your cart is empty, please add some items!")
         return HttpResponseRedirect("/shop/")
-    return render(request, "website/cart.html", {"cart": cart, "app_settings": app_settings})
+    return render(
+        request, "website/cart.html", {"cart": cart, "app_settings": app_settings}
+    )

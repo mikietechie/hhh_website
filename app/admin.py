@@ -10,11 +10,16 @@ class InvoiceItemInlineAdmin(admin.TabularInline):
     model = models.InvoiceItem
 
 
+class PaymentInlineAdmin(admin.TabularInline):
+    fields = ("id", "amount", "method", "status")
+    model = models.Payment
+
+
 @admin.register(models.Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = ("id", "customer", "checked_out",
                     "items_count", "total", "amount_paid", "creation_timestamp")
-    inlines = (InvoiceItemInlineAdmin, )
+    inlines = (InvoiceItemInlineAdmin, PaymentInlineAdmin)
     fieldsets = [
         (
             None,
@@ -30,6 +35,15 @@ class InvoiceAdmin(admin.ModelAdmin):
             },
         ),
     ]
+
+
+@admin.register(models.Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ("id", "amount", "invoice", "method", "status")
+    list_filter = ("status", "invoice_id")
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+        return super().get_queryset(request).select_related("invoice")
 
 
 @admin.register(models.Product)

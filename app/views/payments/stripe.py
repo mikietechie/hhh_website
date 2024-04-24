@@ -1,4 +1,8 @@
-from django.http.response import HttpResponse, JsonResponse, HttpResponseRedirect
+import logging
+import traceback
+
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import stripe
@@ -34,7 +38,7 @@ def create_checkout_session(request, invoice_id: int):
                     'quantity': i.qty,
                     'price_data': {
                         'currency': app_settings.currency,
-                        'unit_amount': int(i.product.price*100),
+                        'unit_amount': int(i.unit_price*100),
                         'product_data': {
                             'name': i.product.name,
                             'description': i.product.description,
@@ -58,8 +62,9 @@ def create_checkout_session(request, invoice_id: int):
         )
         return HttpResponseRedirect(checkout_session.url)
     except Exception as e:
-        raise e
-        return JsonResponse({'error': str(e)})
+        messages.error(request, "An error occurred.")
+        logging.error(traceback.format_exception(e))
+        return HttpResponseRedirect("/cart/")
 
 
 @csrf_exempt
@@ -72,17 +77,15 @@ def stripe_webhook(request):
         event = stripe.Webhook.construct_event(
             payload, sig_header, settings.STRIPE_ENDPOINT_SECRET
         )
-        print(event)
     except ValueError as e:
-        print(e)
+        logging.error(traceback.format_exception(e))
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError as e:
-        print(e)
+        logging.error(traceback.format_exception(e))
         return HttpResponse(status=400)
     checkout_session = stripe.checkout.Session.list(payment_intent=event.data.object.payment_intent).data[0]
     payment = Payment.objects.get(gateway_id=checkout_session.id)
     if event['type'] == 'charge.succeeded':
-        print("Payment was successful.")
         payment.status = Payment.Statuses.completed
         payment.amount = event.data.object.amount_captured / 100
         payment.save()
