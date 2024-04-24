@@ -36,6 +36,9 @@ class InvoiceAdmin(admin.ModelAdmin):
         ),
     ]
 
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+        return super().get_queryset(request).select_related("customer")
+
 
 @admin.register(models.Payment)
 class PaymentAdmin(admin.ModelAdmin):
@@ -96,9 +99,18 @@ class UserAdmin(admin.ModelAdmin):
         return super().get_queryset(request).filter(is_staff=True)
 
 
+class InvoiceInlineAdmin(admin.TabularInline):
+    fields = ("id", "checked_out",
+                    "items_count", "total", "amount_paid")
+    model = models.Invoice
+    fk_name = "customer"
+    
+
+
 @admin.register(models.Customer)
 class CustomerAdmin(UserAdmin):
     list_display = ("id", "email", "phone", "last_login")
+    inlines = (InvoiceInlineAdmin, )
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return super(admin.ModelAdmin, self).get_queryset(request).filter(is_staff=False)
