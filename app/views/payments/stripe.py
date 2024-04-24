@@ -16,7 +16,7 @@ def init_stripe():
         url=f"{settings.SITE_URL}/payments/stripe/webhook/",
     )
 
-# init_stripe()
+init_stripe()
 
 
 @csrf_exempt
@@ -79,6 +79,7 @@ def create_checkout_session(request, invoice_id: int):
 def stripe_webhook(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+    print(request.body)
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
