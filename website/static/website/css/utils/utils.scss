@@ -4,6 +4,10 @@ $hundreds: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 300, 400, 500, 600
     opacity: 0.8;
 }
 
+.fit-cover {
+    object-fit: cover;
+}
+
 @each $size in $hundreds {
     .square-#{$size} {
         height: #{$size}px;

@@ -22,6 +22,7 @@ h1 {
 #navbar {
     img#logo {
         height: 60px;
+        object-fit: cover;
         @media (min-width: 992px) {
             height: 80px;
         }

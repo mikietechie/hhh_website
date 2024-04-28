@@ -2,6 +2,11 @@
   opacity: 0.8;
 }
 
+.fit-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .square-10 {
   height: 10px;
   width: 10px;

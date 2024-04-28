@@ -2,7 +2,7 @@
     {% for product in products_list %}
     <div class="{% firstof product_container_class 'col-xxl-3 col-lg-4 col-md-6 px-lg-5 mb-5' %}" id="product-{{product.id}}">
         <div class="card theme-bg-accent shadow">
-            <img src="{{product.image.url}}" alt="" class="card-img w-100" style="height: 250px;">
+            <img src="{{product.image.url}}" alt="" class="card-img fit-cover w-100" style="height: 250px;">
             <div class="card-header">
                 <h3 class="card-title theme-text-warning">{{app_settings.currency_symbol}} {{product.price}}</h3>
                 <h5 class="card-title theme-text-light">{{product.name}}</h5>
