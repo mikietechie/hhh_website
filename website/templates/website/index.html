@@ -5,7 +5,39 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 px-lg-4">
-                <img src="/static/website/media/hero.jpg" class="fit-cover w-100" alt="" style="height: 70vh;">
+                <!-- Carousel -->
+                <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" style="height: 70vh;">
+
+                    <!-- Indicators/dots -->
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2"></button>
+                    </div>
+
+                    <!-- The slideshow/carousel -->
+                    <div class="carousel-inner h-100">
+                        <div class="carousel-item h-100 active">
+                            <img src="/static/website/media/hero/1.jpeg" alt="Los Angeles" class="d-block w-100 h-100 fit-cover">
+                        </div>
+                        
+                        {% for i in '23456789' %}
+                        <div class="carousel-item h-100">
+                            <img src="/static/website/media/hero/{{i}}.jpeg" alt="Chicago" class="d-block w-100 h-100 fit-cover">
+                        </div>
+                        {% endfor %}
+                            
+                    </div>
+
+                    <!-- Left and right controls/icons -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+                <!-- <img src="/static/website/media/hero.jpg" class="fit-cover w-100" alt="" style="height: 70vh;"> -->
                 <div class="row">
                     <div class="col-lg-4 col-3">
                         <p class="ps-lg-3 pt-3" style="font-size: larger;">
@@ -79,7 +111,7 @@
                 </h2>
                 <div class="text-center theme-text-success">Individualität für Ihren Hund: </div>
                 <div class="text-center">
-                    Einzigartig wie Ihr Hund! Unsere Produkte bieten individuelle 
+                    Einzigartig wie Ihr Hund! Unsere Produkte bieten individuelle
                     Anpassungsmöglichkeiten, sei es in formellen Details, Sondergrößen
                     oder Lieferformen. Gestalten Sie Ihr Hundezuhause nach Ihren
                     Wünschen – inklusive der Möglichkeit, den Namen Ihres
@@ -410,7 +442,8 @@
 </section>
 <section id="couch-bg" class="">
     <div class="container-fluid m-0 p-0">
-        <img src="/static/website/media/couch.jpg" class="fit-cover w-100" alt="" style="height: 400px;" width="1600px" height="1066">
+        <img src="/static/website/media/couch.jpg" class="fit-cover w-100" alt="" style="height: 400px;" width="1600px"
+            height="1066">
     </div>
 </section>
 <section id="contact" class="theme-bg-light ">
@@ -508,7 +541,8 @@
                 <img src="/static/website/media/dogonrag.jpg" class="fit-cover w-100" style="height: 250px;" alt="">
             </div>
             <div class="col-lg-4 col-md-6 mb-3">
-                <img src="/static/website/media/dressingtable.jpg" class="fit-cover w-100" style="height: 250px;" alt="">
+                <img src="/static/website/media/dressingtable.jpg" class="fit-cover w-100" style="height: 250px;"
+                    alt="">
             </div>
             <div class="col-lg-4 col-md-6 mb-3">
                 <img src="/static/website/media/dogandwoman.jpg" class="fit-cover w-100" style="height: 250px;" alt="">
