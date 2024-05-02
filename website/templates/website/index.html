@@ -10,7 +10,8 @@
 
                     <!-- Indicators/dots -->
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0"
+                            class="active"></button>
                         <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="1"></button>
                         <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2"></button>
                     </div>
@@ -18,22 +19,26 @@
                     <!-- The slideshow/carousel -->
                     <div class="carousel-inner h-100">
                         <div class="carousel-item h-100 active">
-                            <img src="/static/website/media/hero/1.jpeg" alt="Los Angeles" class="d-block w-100 h-100 fit-cover">
+                            <img src="/static/website/media/hero/1.jpeg" alt="Los Angeles"
+                                class="d-block w-100 h-100 fit-cover">
                         </div>
-                        
+
                         {% for i in '23456789' %}
                         <div class="carousel-item h-100">
-                            <img src="/static/website/media/hero/{{i}}.jpeg" alt="Chicago" class="d-block w-100 h-100 fit-cover">
+                            <img src="/static/website/media/hero/{{i}}.jpeg" alt="Chicago"
+                                class="d-block w-100 h-100 fit-cover">
                         </div>
                         {% endfor %}
-                            
+
                     </div>
 
                     <!-- Left and right controls/icons -->
-                    <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+                    <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel"
+                        data-bs-slide="prev">
                         <span class="carousel-control-prev-icon"></span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+                    <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel"
+                        data-bs-slide="next">
                         <span class="carousel-control-next-icon"></span>
                     </button>
                 </div>
@@ -453,8 +458,9 @@
                 <h1 class="letter-spacing-1"><span class="text-decoration-underline">KØnt</span>akt</h1>
             </div>
         </div>
-        <form action="" class="row mb-5">
+        <form action="/contact" class="row mb-5" id="contact-form">
             <div class="col-lg-6">
+                {% csrf_token %}
                 <div class="row">
                     <caption>
                         <b>Name</b>
@@ -462,13 +468,13 @@
                     <div class="col-md-6 mb-3">
                         <div class="form-group">
                             <label for="firstname">Vorname*</label>
-                            <input type="text" name="firstname" class="form-control" />
+                            <input type="text" name="firstname" id="firstname" class="form-control" />
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-group">
                             <label for="lastname">Nachname*</label>
-                            <input type="text" name="lastname" class="form-control" />
+                            <input type="text" name="lastname" id="lastname" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -476,7 +482,7 @@
                     <div class="col-12 mb-3">
                         <div class="form-group">
                             <label for="email"><b>E-mail*</b></label>
-                            <input type="email" name="email" class="form-control" />
+                            <input type="email" name="email" id="email" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -484,7 +490,7 @@
                     <div class="col-12 mb-3">
                         <div class="form-group">
                             <label for="telephone"><b>Telephone</b></label>
-                            <input type="tel" name="telephone" class="form-control" />
+                            <input type="tel" name="telephone" id="telephone" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -495,25 +501,25 @@
                     <div class="col-12 mb-3">
                         <div class="form-group">
                             <label for="housen1">Straße & Hausnummer*</label>
-                            <input type="text" name="housen1" class="form-control" />
+                            <input type="text" name="housen1" id="housen1" class="form-control" />
                         </div>
                     </div>
                     <div class="col-12 mb-3">
                         <div class="form-group">
                             <label for="housen2">Straße & Hausnummer 2</label>
-                            <input type="text" name="housen2" class="form-control" />
+                            <input type="text" name="housen2" id="housen2" class="form-control" />
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="form-group">
                             <label for="plz">PLZ*</label>
-                            <input type="text" name="plz" class="form-control" />
+                            <input type="text" name="plz" id="plz" class="form-control" />
                         </div>
                     </div>
                     <div class="col-md-9 mb-3">
                         <div class="form-group">
                             <label for="ort">Ort*</label>
-                            <input type="text" name="ort" class="form-control" />
+                            <input type="text" name="ort" id="ort" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -524,8 +530,11 @@
                 </caption>
                 <div class="form-group">
                     <label for="msg">Individuelle Anfragen, Fragen, Anregungen etc.*</label>
-                    <textarea type="text" name="msg" class="form-control" style="height: 180px;"></textarea>
+                    <textarea type="text" name="msg" id="msg" class="form-control" style="height: 180px;"></textarea>
                 </div>
+            </div>
+            <div class="col-12 mb-3 text-center">
+                <button class="btn theme-bg-secondary" type="submit">Send</button>
             </div>
         </form>
     </div>
@@ -557,3 +566,70 @@
     </div>
 </section>
 {% endblock content %}
+
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const $contactForm = document.querySelector("form#contact-form")
+        $contactForm.addEventListener("submit", async (e) => {
+            e.preventDefault()
+            console.log("Submit")
+            const csrfmiddlewaretoken = $contactForm.querySelector('input[name="csrfmiddlewaretoken"]').value
+            const formData = { csrfmiddlewaretoken };
+            [
+                "firstname",
+                "lastname",
+                "email",
+                "telephone",
+                "housen1",
+                "housen2",
+                "plz",
+                "ort",
+                "msg",
+            ].forEach((field) => {
+                formData[field] = $contactForm.querySelector(`#${field}`).value
+            })
+            try {
+                const response = await fetch($contactForm.getAttribute("action"), {
+                    method: "POST", // *GET, POST, PUT, DELETE, etc.
+                    mode: "cors", // no-cors, *cors, same-origin
+                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: "same-origin", // include, *same-origin, omit
+                    headers: {
+                        "Content-Type": "application/json",
+                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    redirect: "follow", // manual, *follow, error
+                    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                    body: JSON.stringify(formData), // body data type must match "Content-Type" header
+                })
+                if (!response.ok) {
+                    throw Error("Failed to send")
+                }
+                Toastify({
+                    text: "Your email was sent successfully!",
+                    className: "info",
+                    style: {
+                        background: "var(--dark)",
+                        color: "var(--success)",
+                        "font-size": "24px"
+                    }
+                }).showToast();
+            } catch (error) {
+                console.error(error)
+                Toastify({
+                    text: "Failed to send. Please check if your email is correct or write to our email directly",
+                    className: "danger",
+                    style: {
+                        background: "var(--dark)",
+                        color: "var(--warning)",
+                        "font-size": "24px"
+                    }
+                }).showToast();
+            }
+            return false
+        })
+    })
+</script>
+{% endblock scripts %}

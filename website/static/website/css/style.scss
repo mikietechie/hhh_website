@@ -21,11 +21,8 @@ h1 {
 
 #navbar {
     img#logo {
-        height: 60px;
+        height: 50px;
         object-fit: cover;
-        @media (min-width: 992px) {
-            height: 80px;
-        }
     }
     a {
         text-decoration: none;
@@ -33,6 +30,26 @@ h1 {
         &:hover {
             text-decoration: underline;
             color: var(--warning)
+        }
+    }
+    hr {
+        margin-bottom: 70px;
+    }
+    @media (min-width: 992px) {
+
+    }
+    @media (min-width: 992px) {
+    }
+    .navbar-small {
+        #mobile-menu {
+            background-color: var(--secondary);
+            ul {
+                li {
+                    &.list-group-item {
+                        background-color: var(--secondary);
+                    }
+                }
+            }
         }
     }
 }

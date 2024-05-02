@@ -38,16 +38,11 @@
 
 <body>
     {% block body %}
-    <section id="navbar" class="">
-        <div class="container-fluid nav-large">
-            <div class="row py-lg-4 px-lg-4">
-                <div class="col-12 d-lg-none d-none" style="transform: translateY(100%); margin-top: -100%;">
-                    <div class="text-end">
-                        <a href="#menu" id="menu-btn" class="">MENU&nbsp;<i class="fa-2x fa-solid fa-bars"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-lg-0 mb-3">
-                    <div class="text-start mt-lg-3">
+    <section id="navbar" class="fixed-top theme-bg-light py-2 shadow">
+        <div class="container-fluid nav-large d-none d-lg-block">
+            <div class="row px-lg-4">
+                <div class="col-lg-4">
+                    <div class="text-start">
                         <span class="opacity-0 pb-2 d-none d-lg-inline">Hello World</span>
                         <br>
                         <span class="theme-bg-secondary py-1 px-2 rounded">
@@ -57,13 +52,13 @@
                         </span>
                     </div>
                 </div>
-                <div class="col-lg-4 mb-lg-0 mb-3 text-center">
+                <div class="col-lg-4 text-center">
                     <a href="/">
                         <img src="/static/website/media/HHH_Logo.svg" alt="HHH Official Logo" id="logo">
                     </a>
                 </div>
-                <div class="col-lg-4 mb-lg-0 mb-3">
-                    <div class="text-end mt-lg-3">
+                <div class="col-lg-4">
+                    <div class="text-end">
                         <span class="pe-1 pb-2">
                             {% if user.is_authenticated %}
                             <a href="#!" class="">{{user}}</a></li>
@@ -87,21 +82,63 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid d-none">
+        <div class="container-fluid navbar-small d-lg-none">
             <div class="row">
                 <div class="col-12 pt-2" style="transform: translateY(100%); margin-top: -100%;">
                     <div class="text-end">
-                        <a href="#menu" id="menu-btn" class="">MENU&nbsp;<i class="fa-2x fa-solid fa-bars"></i></a>
+                        <a href="#menu" id="menu-btn" class=""><i class="fa-2x fa-solid fa-bars"></i></a>
                     </div>
                 </div>
                 <div class="col-12 text-center">
                     <a href="/" class="mx-auto">
-                        <img src="/static/website/media/HHH_Logo.svg" alt="HHH Official Logo" style="max-height: 80px;">
+                        <img src="/static/website/media/HHH_Logo.svg" alt="HHH Official Logo" id="logo">
                     </a>
+                </div>
+            </div>
+            <div class="row d-none" id="mobile-menu">
+                <div class="col-12">
+                    <ul class="list-unstyled py-5">
+                        <li class="list-group-item">
+                            <a href="/">HOME</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="/shop/">SHOP</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="/#featured">FEATURED</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="/#features">FEATURES</a>
+                        </li>
+                        <li class="list-group-item">
+                            {% if user.is_authenticated %}
+                            <a href="#!" class="">{{user}}</a></li>
+                            {% else %}
+                            <a href="#signinup-col" class="">LOGIN</a></li>
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <a href="/#about">ABOUT</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="/#faq">FAQ</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="/#contact">CONTACT</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="/cart/"><i class="fa-solid fa-cart-shopping"></i>&nbsp;CART</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="#!">🇬🇧</a>
+                            <a href="#!" class="ms-5">🇩🇪</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </section>
+    <hr>
     {% block content %}{% endblock content %}
     <section id="footer" class="theme-bg-dark">
         <div class="container-fluid py-5">
@@ -193,22 +230,26 @@
 
 <script>
     const $menuBtn = document.querySelector("a#menu-btn")
+    const $mobileMenu = document.querySelector("#mobile-menu")
     let menuOpened = false
+
+    const toggleMenu = () => $mobileMenu.classList.toggle("d-none")
 
     $menuBtn.addEventListener("click", (e) => {
         e.preventDefault()
         menuOpened = !menuOpened
         menuToggled()
     })
+    $mobileMenu.querySelectorAll("a").forEach($a => {
+        $a.addEventListener("click", toggleMenu)
+    })
     const menuToggled = () => {
         if (menuOpened) {
-            // change menu icon
-            // show menu drop down
-            alert("menu open")
+            toggleMenu()
+            // alert("menu open")
         } else {
-            // change menu icon
-            // hide menu drop down
-            alert("menu closed")
+            toggleMenu()
+            // alert("menu closed")
         }
     }
 </script>

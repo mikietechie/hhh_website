@@ -1,7 +1,12 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 
 from app.utils import get_cached
 from app.models import Product, Settings, Invoice
@@ -42,3 +47,15 @@ def cart_view(request: WSGIRequest):
     return render(
         request, "website/cart.html", {"cart": cart, "app_settings": app_settings}
     )
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def contact(request: WSGIRequest):
+    send_mail(
+        subject="",
+        message="",
+        from_email="",
+        fail_silently=False,
+        recipient_list=[settings.DEFAULT_TO_EMAIL]
+    )
+    return JsonResponse({"msg": "Your email was sent successfully."})

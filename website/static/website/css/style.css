@@ -19,14 +19,9 @@ h1 .text-decoration-underline {
 }
 
 #navbar img#logo {
-  height: 60px;
+  height: 50px;
   -o-object-fit: cover;
      object-fit: cover;
-}
-@media (min-width: 992px) {
-  #navbar img#logo {
-    height: 80px;
-  }
 }
 #navbar a {
   text-decoration: none;
@@ -35,6 +30,15 @@ h1 .text-decoration-underline {
 #navbar a:hover {
   text-decoration: underline;
   color: var(--warning);
+}
+#navbar hr {
+  margin-bottom: 70px;
+}
+#navbar .navbar-small #mobile-menu {
+  background-color: var(--secondary);
+}
+#navbar .navbar-small #mobile-menu ul li.list-group-item {
+  background-color: var(--secondary);
 }
 
 #about {
