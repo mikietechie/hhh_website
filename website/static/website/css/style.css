@@ -25,6 +25,7 @@ h1 .text-decoration-underline {
 }
 #navbar a {
   text-decoration: none;
+  font-weight: bold;
   color: var(--dark);
 }
 #navbar a:hover {
